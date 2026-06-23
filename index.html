@@ -1,0 +1,2362 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minna no Nihongo - Kuis Kosakata (dengan Kanji)</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            outline: none;
+        }
+        input,
+        select {
+            font-family: inherit;
+            outline: none;
+            border: none;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            width: 100%;
+            max-width: 960px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 32px;
+            padding: 30px 28px 38px;
+            box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s;
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .app-title {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .app-title small {
+            font-size: 14px;
+            font-weight: 400;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.5);
+            margin-left: 6px;
+        }
+        .user-badge {
+            background: rgba(255, 255, 255, 0.10);
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .user-badge .role-tag {
+            background: rgba(255, 215, 0, 0.20);
+            padding: 2px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffd700;
+            letter-spacing: 0.3px;
+        }
+        .logout-btn {
+            background: rgba(255, 70, 70, 0.15);
+            color: #ff6b6b;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s;
+            border: 1px solid rgba(255, 70, 70, 0.15);
+        }
+        .logout-btn:hover {
+            background: rgba(255, 70, 70, 0.25);
+        }
+
+        /* ===== LOGIN ===== */
+        .login-box {
+            max-width: 400px;
+            margin: 20px auto 0;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 36px 32px 42px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .login-box h2 {
+            text-align: center;
+            font-weight: 600;
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        .login-box .sub {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+        .login-box label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 4px;
+        }
+        .login-box input,
+        .login-box select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            transition: 0.2s;
+            margin-bottom: 18px;
+        }
+        .login-box input:focus,
+        .login-box select:focus {
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.10);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.10);
+        }
+        .login-box select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 17px;
+            border-radius: 16px;
+            transition: 0.2s;
+            margin-top: 6px;
+        }
+        .login-btn:hover {
+            transform: scale(1.01);
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.25);
+        }
+        .login-error {
+            color: #ff6b6b;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 12px;
+            min-height: 22px;
+        }
+
+        /* ===== DASHBOARD ===== */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .dashboard-header h2 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .dashboard-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .dashboard-controls label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .dashboard-controls select {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            font-size: 14px;
+            min-width: 140px;
+        }
+        .dashboard-controls select option {
+            background: #1a1a2e;
+        }
+        .access-info {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            margin-left: 6px;
+        }
+
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 14px;
+            margin: 16px 0 24px;
+        }
+        .exam-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 18px 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: 0.2s;
+            text-align: center;
+            cursor: pointer;
+        }
+        .exam-card:hover:not(.locked) {
+            background: rgba(255, 255, 255, 0.10);
+            transform: translateY(-3px);
+            border-color: rgba(255, 215, 0, 0.25);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        .exam-card.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+            filter: grayscale(0.6);
+        }
+        .exam-card .exam-title {
+            font-weight: 600;
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+        .exam-card .exam-sub {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .exam-card .badge-count {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            border-radius: 20px;
+            padding: 2px 14px;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        /* ===== VOCAB TABLE ===== */
+        .vocab-table-wrap {
+            margin-top: 20px;
+            overflow-x: auto;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.15);
+        }
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .vocab-table th {
+            text-align: left;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .vocab-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .vocab-table tr:last-child td {
+            border-bottom: none;
+        }
+        .vocab-table .ch-cell {
+            color: #ffd700;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .vocab-table .kanji-cell {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .vocab-table .hiragana-cell {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .vocab-table .romaji-cell {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+
+        /* Table filter dropdown */
+        .table-filter {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px 14px 0 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap;
+        }
+        .table-filter label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+        .table-filter select {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            font-size: 14px;
+            min-width: 120px;
+        }
+        .table-filter select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        .table-filter .filter-count {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-left: auto;
+        }
+
+        /* ===== QUIZ ===== */
+        .quiz-container {
+            padding: 6px 0;
+        }
+        .quiz-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .quiz-top .chapter-label {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .quiz-top .chapter-label strong {
+            color: #ffd700;
+            font-weight: 600;
+        }
+        .quiz-progress {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .timer-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.30);
+            padding: 6px 18px 6px 14px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .timer-box .timer-icon {
+            font-size: 22px;
+        }
+        .timer-box .timer-value {
+            font-size: 32px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            min-width: 48px;
+            text-align: center;
+            transition: color 0.25s;
+        }
+        .timer-box .timer-value.danger {
+            color: #ff6b6b;
+        }
+        .timer-box .timer-value.warning {
+            color: #ffd93d;
+        }
+        .timer-box .timer-value.safe {
+            color: #6bcb77;
+        }
+        .score-box {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .score-box strong {
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .quiz-word {
+            text-align: center;
+            padding: 30px 10px 18px;
+        }
+        .word-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .word-display .kanji {
+            font-size: 56px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            line-height: 1.2;
+        }
+        .word-display .hiragana {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        .word-display .romaji-hint {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.25);
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-top: 4px;
+        }
+        .question-prompt {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 16px;
+            font-weight: 300;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0 24px;
+        }
+        @media (max-width: 500px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .option-btn {
+            padding: 16px 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: 0.15s;
+            text-align: center;
+        }
+        .option-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.13);
+            border-color: rgba(255, 215, 0, 0.20);
+            transform: scale(1.01);
+        }
+        .option-btn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+        .option-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .quiz-footer {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            gap: 14px;
+        }
+        .quit-btn {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.5);
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: 0.2s;
+        }
+        .quit-btn:hover {
+            background: rgba(255, 255, 255, 0.10);
+            color: #fff;
+        }
+
+        /* ===== GAME OVER ===== */
+        .gameover-box {
+            text-align: center;
+            padding: 30px 10px 20px;
+        }
+        .gameover-box .big-icon {
+            font-size: 70px;
+            margin-bottom: 6px;
+        }
+        .gameover-box h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .gameover-box .final-score {
+            font-size: 56px;
+            font-weight: 800;
+            color: #ffd700;
+            margin: 10px 0 4px;
+        }
+        .gameover-box .stats {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+        .gameover-box .stats span {
+            color: #fff;
+            font-weight: 600;
+        }
+        .gameover-actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .gameover-actions button {
+            padding: 12px 34px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+        .btn-retry {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+        }
+        .btn-retry:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.25);
+        }
+        .btn-dashboard {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .btn-dashboard:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== UTILITY ===== */
+        .hidden {
+            display: none !important;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 18px 14px 28px;
+                border-radius: 24px;
+            }
+            .app-title {
+                font-size: 20px;
+            }
+            .app-title small {
+                font-size: 12px;
+            }
+            .exam-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            .word-display .kanji {
+                font-size: 40px;
+            }
+            .word-display .hiragana {
+                font-size: 18px;
+            }
+            .timer-box .timer-value {
+                font-size: 26px;
+                min-width: 38px;
+            }
+            .option-btn {
+                font-size: 16px;
+                padding: 14px 10px;
+            }
+            .gameover-box .final-score {
+                font-size: 42px;
+            }
+            .vocab-table {
+                font-size: 12px;
+            }
+            .vocab-table th,
+            .vocab-table td {
+                padding: 8px 10px;
+            }
+            .vocab-table .kanji-cell {
+                font-size: 17px;
+            }
+            .login-box {
+                padding: 24px 18px 30px;
+            }
+            .dashboard-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .table-filter {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .table-filter .filter-count {
+                margin-left: 0;
+                text-align: center;
+            }
+        }
+        @media (max-width: 400px) {
+            .exam-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <!-- ===== HEADER ===== -->
+        <div class="app-header">
+            <div class="app-title">
+                📚 みんなの日本語
+                <small>Minna no Nihongo</small>
+            </div>
+            <div class="user-badge" id="userBadge">
+                <span id="userNameDisplay">—</span>
+                <span class="role-tag" id="roleTagDisplay">—</span>
+                <button class="logout-btn" id="logoutBtn">Keluar</button>
+            </div>
+        </div>
+
+        <!-- ===== LOGIN ===== -->
+        <div id="loginSection">
+            <div class="login-box">
+                <h2>🔑 Masuk</h2>
+                <p class="sub">Pilih level dan masukkan password</p>
+                <label for="loginLevel">Level</label>
+                <select id="loginLevel">
+                    <option value="kelas1">Kelas 1</option>
+                    <option value="kelas2">Kelas 2</option>
+                    <option value="sensei">Sensei</option>
+                </select>
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="Masukkan password" />
+                <button class="login-btn" id="loginBtn">🚀 Masuk</button>
+                <div class="login-error" id="loginError"></div>
+            </div>
+        </div>
+
+        <!-- ===== DASHBOARD ===== -->
+        <div id="dashboardSection" class="hidden">
+            <div class="dashboard-header">
+                <h2>📖 Pilih Ujian</h2>
+                <div class="dashboard-controls">
+                    <label for="examMode">Mode Ujian</label>
+                    <select id="examMode">
+                        <option value="perBab">Per Bab</option>
+                        <option value="per5Bab">Setiap 5 Bab</option>
+                        <option value="per25Bab">Setiap 25 Bab</option>
+                    </select>
+                    <span class="access-info" id="accessInfo">Akses: Bab 1–25</span>
+                </div>
+            </div>
+
+            <!-- Exam cards -->
+            <div class="exam-grid" id="examGrid"></div>
+
+            <!-- Vocabulary Table with Dropdown Filter -->
+            <div class="vocab-table-wrap">
+                <div class="table-filter">
+                    <label for="babFilter">📂 Filter Bab:</label>
+                    <select id="babFilter">
+                        <option value="all">📋 Semua Bab</option>
+                    </select>
+                    <span class="filter-count" id="filterCount">Menampilkan 0 kosakata</span>
+                </div>
+                <table class="vocab-table" id="vocabTable">
+                    <thead>
+                        <tr>
+                            <th>Bab</th>
+                            <th>Kanji</th>
+                            <th>Hiragana</th>
+                            <th>Romaji</th>
+                            <th>Arti</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vocabTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== QUIZ ===== -->
+        <div id="quizSection" class="hidden">
+            <div class="quiz-container">
+                <div class="quiz-top">
+                    <div>
+                        <div class="chapter-label" id="quizLabel">Bab <strong id="quizRange">1</strong></div>
+                        <div class="quiz-progress" id="quizProgress">Soal 1 / 10</div>
+                    </div>
+                    <div class="timer-box">
+                        <span class="timer-icon">⏳</span>
+                        <span class="timer-value safe" id="timerDisplay">10</span>
+                        <span style="font-size:15px;color:rgba(255,255,255,0.3);">dtk</span>
+                    </div>
+                    <div class="score-box">
+                        ✅ <strong id="scoreDisplay">0</strong>
+                    </div>
+                </div>
+
+                <div class="quiz-word">
+                    <div class="word-display">
+                        <div class="kanji" id="quizWordKanji"></div>
+                        <div class="hiragana" id="quizWordHiragana"></div>
+                        <div class="romaji-hint" id="quizWordRomaji"></div>
+                    </div>
+                    <div class="question-prompt">Pilih arti yang benar</div>
+                </div>
+
+                <div class="options-grid" id="optionsGrid">
+                    <button class="option-btn" data-index="0">saya</button>
+                    <button class="option-btn" data-index="1">kamu</button>
+                    <button class="option-btn" data-index="2">dia</button>
+                    <button class="option-btn" data-index="3">kita</button>
+                </div>
+
+                <div class="quiz-footer">
+                    <button class="quit-btn" id="quitQuizBtn">✕ Keluar Kuis</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== GAME OVER ===== -->
+        <div id="gameoverSection" class="hidden">
+            <div class="gameover-box">
+                <div class="big-icon">⏰</div>
+                <h2>Waktu Habis!</h2>
+                <div class="final-score" id="finalScore">0</div>
+                <div style="font-size:18px;color:rgba(255,255,255,0.5);">jawaban benar</div>
+                <div class="stats">
+                    Ujian: <span id="goRange">Bab 1</span> —
+                    Total soal: <span id="goTotal">10</span>
+                </div>
+                <div class="gameover-actions">
+                    <button class="btn-retry" id="retryBtn">🔄 Ulangi</button>
+                    <button class="btn-dashboard" id="goDashboardBtn">📋 Kembali</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  DATA — 50 Bab, masing-masing 2 kosakata (total 100 entri)
+        // ============================================================
+        const VOCAB_DATA = [
+            // Bab 1
+            { bab: 1, jp: 'わたし', kanji: '私', romaji: 'watashi', arti: 'saya' },
+            { bab: 1, jp: 'あなた', kanji: '貴方', romaji: 'anata', arti: 'kamu' },
+            { bab: 1, jp: 'わたし', kanji: '私', romaji: 'watashi', arti: 'Saya' },
+            { bab: 1, jp: 'あなた', kanji: '', romaji: 'anata', arti: 'Kamu' },
+            { bab: 1, jp: 'あのひと', kanji: 'あの人', romaji: 'ano hito', arti: 'Orang itu (biasa)' },
+            { bab: 1, jp: 'あのかた', kanji: 'あの方', romaji: 'ano kata', arti: 'Orang itu (sopan)' },
+            { bab: 1, jp: '～さん', kanji: '', romaji: '~san', arti: 'Saudara......' },
+            { bab: 1, jp: '～ちゃん', kanji: '', romaji: '~chan', arti: 'Panggilan untuk anak laki/perempuan' },
+            { bab: 1, jp: '～じん', kanji: '～人', romaji: '~jin', arti: 'Orang......' },
+            { bab: 1, jp: 'せんせい', kanji: '先生', romaji: 'sensei', arti: 'Guru,dosen' },
+            { bab: 1, jp: 'きょうし', kanji: '教師', romaji: 'kyoushi', arti: 'Guru,dosen (dipakai untuk kalangan' },
+            { bab: 1, jp: 'がくせい', kanji: '学生', romaji: 'gakusei', arti: 'Siswa,murid' },
+            { bab: 1, jp: 'かいしゃいん', kanji: '会社員', romaji: 'kaishain', arti: 'Pegawai perusahaan' },
+            { bab: 1, jp: 'しゃいん', kanji: '社員', romaji: 'shain', arti: 'Pegawai perusahaan' },
+            { bab: 1, jp: 'ぎんこういん', kanji: '銀行員', romaji: 'ginkouin', arti: 'Pegawai bank' },
+            { bab: 1, jp: 'いしゃ', kanji: '医者', romaji: 'isha', arti: 'Dokter' },
+            { bab: 1, jp: 'けんきゅうしゃ', kanji: '研究者', romaji: 'kenkyuusha', arti: 'Peneliti' },
+            { bab: 1, jp: 'だいがく', kanji: '大学', romaji: 'daigaku', arti: 'Universitas' },
+            { bab: 1, jp: 'びょういん', kanji: '病院', romaji: 'byouin', arti: 'Rumah sakit' },
+            { bab: 1, jp: 'だれ', kanji: '', romaji: 'dare', arti: 'Siapa (biasa)' },
+            { bab: 1, jp: 'どなた', kanji: '', romaji: 'donata', arti: 'Siapa (sopan)' },
+            { bab: 1, jp: '～さい', kanji: '～歳', romaji: '~sai', arti: 'Umur......' },
+            { bab: 1, jp: 'なんさい', kanji: '何歳', romaji: 'nansai', arti: 'Umur berapa?(biasa)' },
+            { bab: 1, jp: 'おいくつ', kanji: '', romaji: 'oikutsu', arti: 'Umur berapa?(sopan)' },
+            { bab: 1, jp: 'はい', kanji: '', romaji: 'hai', arti: 'Iya' },
+            { bab: 1, jp: 'いいえ', kanji: '', romaji: 'iie', arti: 'Tidak' },
+            { bab: 1, jp: 'はじめまして', kanji: '', romaji: 'hajimemashite', arti: 'Perkenalkan' },
+            { bab: 1, jp: '～からきました', kanji: '～から来ました', romaji: '~kara kimashita', arti: 'Datang dari.....' },
+            { bab: 1, jp: 'どうぞよろしくおねがいします', kanji: 'どうぞよろしくお願します', romaji: 'douzo yoroshiku onegaishimasu', arti: 'Terimalah perkenalan saya' },
+            { bab: 1, jp: 'しつれいですが', kanji: '失礼ですが', romaji: 'shitsurei desu ga', arti: 'Permisi' },
+            { bab: 1, jp: 'おなまえは', kanji: 'お名前は', romaji: 'onamae wa', arti: 'Nama anda siapa?' },
+            { bab: 1, jp: 'アメリカ', kanji: '', romaji: 'amerika', arti: 'Amerika' },
+            { bab: 1, jp: 'イギリス', kanji: '', romaji: 'igirisu', arti: 'Inggris' },
+            { bab: 1, jp: 'インド', kanji: '', romaji: 'indo', arti: 'India' },
+            { bab: 1, jp: 'インドネシア', kanji: '', romaji: 'indonesia', arti: 'Indonesia' },
+            { bab: 1, jp: 'かんこく', kanji: '韓国', romaji: 'kankoku', arti: 'Korea' },
+            { bab: 1, jp: 'ちゅうごく', kanji: '中国', romaji: 'chuugoku', arti: 'China' },
+            { bab: 1, jp: 'ドイツ', kanji: '', romaji: 'doitsu', arti: 'Jerman' },
+            { bab: 1, jp: 'にほん', kanji: '日本', romaji: 'nihon', arti: 'Jepang' },
+            { bab: 1, jp: 'フランス', kanji: '', romaji: 'furansu', arti: 'Perancis' },
+            { bab: 2, jp: 'これ', kanji: '', romaji: 'kore', arti: 'Ini' },
+            { bab: 2, jp: 'それ', kanji: '', romaji: 'sore', arti: 'Itu (dekat)' },
+            { bab: 2, jp: 'あれ', kanji: '', romaji: 'are', arti: 'Itu (jauh)' },
+            { bab: 2, jp: 'この～', kanji: '', romaji: 'kono~', arti: '~ini' },
+            { bab: 2, jp: 'その～', kanji: '', romaji: 'sono~', arti: '~itu (dekat)' },
+            { bab: 2, jp: 'あの～', kanji: '', romaji: 'ano~', arti: '~itu (jauh)' },
+            { bab: 2, jp: 'ほん', kanji: '本', romaji: 'hon', arti: 'Buku' },
+            { bab: 2, jp: 'じしょ', kanji: '辞書', romaji: 'jisho', arti: 'Kamus' },
+            { bab: 2, jp: 'ざっし', kanji: '雑誌', romaji: 'zasshi', arti: 'Majalah' },
+            { bab: 2, jp: 'しんぶん', kanji: '新聞', romaji: 'shinbun', arti: 'Koran' },
+            { bab: 2, jp: 'ノート', kanji: '', romaji: 'noto', arti: 'Buku catatan' },
+            { bab: 2, jp: 'てちょう', kanji: '手帳', romaji: 'techou', arti: 'Buku agenda' },
+            { bab: 2, jp: 'めいし', kanji: '名刺', romaji: 'meishi', arti: 'Kartu nama' },
+            { bab: 2, jp: 'カード', kanji: '', romaji: 'kaado', arti: 'Kartu' },
+            { bab: 2, jp: 'えんぴつ', kanji: '鉛筆', romaji: 'enpitsu', arti: 'Pensil' },
+            { bab: 2, jp: 'ボールペン', kanji: '', romaji: 'bourupen', arti: 'Bolpoin' },
+            { bab: 2, jp: 'シャープペンシル', kanji: '', romaji: 'shaapupenshiru', arti: 'Pensil mekanik' },
+            { bab: 2, jp: 'かぎ', kanji: '鍵', romaji: 'kagi', arti: 'Kunci' },
+            { bab: 2, jp: 'とけい', kanji: '時計', romaji: 'tokei', arti: 'Jam, arloji' },
+            { bab: 2, jp: 'かき', kanji: '傘', romaji: 'kaki', arti: 'Payung' },
+            { bab: 2, jp: 'かばん', kanji: '鞄', romaji: 'kaban', arti: 'Tas' },
+            { bab: 2, jp: 'テレビ', kanji: '', romaji: 'terebi', arti: 'Televisi' },
+            { bab: 2, jp: 'ラジオ', kanji: '', romaji: 'rajio', arti: 'Radio' },
+            { bab: 2, jp: 'カメラ', kanji: '', romaji: 'kamera', arti: 'Kamera' },
+            { bab: 2, jp: 'コンピューター', kanji: '', romaji: 'konpyuutaa', arti: 'Komputer' },
+            { bab: 2, jp: 'くるま', kanji: '車', romaji: 'kuruma', arti: 'Mobil' },
+            { bab: 2, jp: 'つくえ', kanji: '机', romaji: 'tsukue', arti: 'Meja' },
+            { bab: 2, jp: 'いす', kanji: '椅子', romaji: 'isu', arti: 'Kursi' },
+            { bab: 2, jp: 'チョコレート', kanji: '', romaji: 'chokoreeto', arti: 'Coklat' },
+            { bab: 2, jp: 'コーヒー', kanji: '', romaji: 'koohii', arti: 'Kopi' },
+            { bab: 2, jp: 'おみやげ', kanji: 'お土産', romaji: 'omiyage', arti: 'Oleh-oleh' },
+            { bab: 2, jp: 'えいご', kanji: '英語', romaji: 'eigo', arti: 'Bahasa inggris' },
+            { bab: 2, jp: 'にほんご', kanji: '日本語', romaji: 'nihongo', arti: 'Bahasa jepang' },
+            { bab: 2, jp: '～ご', kanji: '～語', romaji: '~go', arti: 'Bahasa ~' },
+            { bab: 2, jp: 'なん', kanji: '何', romaji: 'nan', arti: 'Apa' },
+            { bab: 2, jp: 'そう', kanji: '', romaji: 'sou', arti: 'Begitu' },
+            { bab: 2, jp: 'あのう', kanji: '', romaji: 'anou', arti: 'Eee ...(ungkapan ketika ragu)' },
+            { bab: 2, jp: 'えっ', kanji: '', romaji: 'eh', arti: 'Eh (diucapkan ketika mendengar sesuatu diluar dugaan)' },
+            { bab: 2, jp: 'どうぞ', kanji: '', romaji: 'douzo', arti: 'Silakan' },
+            { bab: 2, jp: 'どうもありがとうございます', kanji: '', romaji: 'doumo arigatou gozaimasu', arti: 'Terima kasih' },
+            { bab: 2, jp: 'そうですか', kanji: '', romaji: 'sou desu ka', arti: 'O,begitu, benarkah?' },
+            { bab: 2, jp: 'ちがいます', kanji: '違います', romaji: 'chigaimasu', arti: 'Bukan, Tidak, Salah' },
+            { bab: 2, jp: 'あ', kanji: '', romaji: 'a', arti: 'O,eh (dipakai ketika sadar)' },
+            { bab: 2, jp: 'これからおせわになります', kanji: 'これからお世話になります', romaji: 'kore kara osewa ni narimasu', arti: 'Mulai sekarang saya akan meminta bantuannya' },
+            { bab: 2, jp: 'こちらこそよろしくおねがいします', kanji: '', romaji: 'kochira koso yoroshiku onegaishimasu', arti: 'Ya sama-sama' },
+            // Bab 2
+            { bab: 2, jp: 'これ', kanji: 'これ', romaji: 'kore', arti: 'ini' },
+            { bab: 2, jp: 'それ', kanji: 'それ', romaji: 'sore', arti: 'itu' },
+            // Bab 3
+            { bab: 3, jp: 'ここ', kanji: 'ここ', romaji: 'koko', arti: 'sini' },
+            { bab: 3, jp: 'そこ', kanji: 'そこ', romaji: 'soko', arti: 'situ' },
+            { bab: 3, jp: 'ここ', kanji: '', romaji: 'koko', arti: 'Disini' },
+            { bab: 3, jp: 'そこ', kanji: '', romaji: 'soko', arti: 'Disitu' },
+            { bab: 3, jp: 'あそこ', kanji: '', romaji: 'asoko', arti: 'Disana' },
+            { bab: 3, jp: 'どこ', kanji: '', romaji: 'doko', arti: 'Dimana?' },
+            { bab: 3, jp: 'こちら', kanji: '', romaji: 'kochira', arti: 'Disini' },
+            { bab: 3, jp: 'そちら', kanji: '', romaji: 'sochira', arti: 'Disitu' },
+            { bab: 3, jp: 'あちら', kanji: '', romaji: 'achira', arti: 'Disana' },
+            { bab: 3, jp: 'どちら', kanji: '', romaji: 'dochira', arti: 'Dimana?' },
+            { bab: 3, jp: 'きょうしつ', kanji: '教室', romaji: 'kyoushitsu', arti: 'Ruang kelas' },
+            { bab: 3, jp: 'しょくどう', kanji: '食堂', romaji: 'shokudou', arti: 'Ruang makan, Kantin' },
+            { bab: 3, jp: 'じむしょ', kanji: '事務所', romaji: 'jimusho', arti: 'Kantor' },
+            { bab: 3, jp: 'かいぎしつ', kanji: '会議室', romaji: 'kaigishitsu', arti: 'Ruang rapat' },
+            { bab: 3, jp: 'うけつけ', kanji: '受付', romaji: 'uketsuke', arti: 'Meja informasi' },
+            { bab: 3, jp: 'ロビー', kanji: '', romaji: 'robii', arti: 'Ruang tunggu, lobi' },
+            { bab: 3, jp: 'へや', kanji: '部屋', romaji: 'heya', arti: 'Kamar' },
+            { bab: 3, jp: 'おてあらい', kanji: 'お手洗い', romaji: 'otearai', arti: 'Kamar kecil, WC' },
+            { bab: 3, jp: 'トイレ', kanji: '', romaji: 'toire', arti: 'Toilet' },
+            { bab: 3, jp: 'かいだん', kanji: '階段', romaji: 'kaidan', arti: 'Tangga' },
+            { bab: 3, jp: 'エレベーター', kanji: '', romaji: 'erebeetaa', arti: 'Lift' },
+            { bab: 3, jp: 'エスカレーター', kanji: '', romaji: 'esukareetaa', arti: 'Eskalator, tangga berjalan' },
+            { bab: 3, jp: 'じどうはんばいき', kanji: '自動販売機', romaji: 'jidou hanbaiki', arti: 'Mesin jual otomatis' },
+            { bab: 3, jp: 'でんわ', kanji: '電話', romaji: 'denwa', arti: 'Telepon' },
+            { bab: 3, jp: 'おくに', kanji: 'お国', romaji: 'okuni', arti: 'Negara' },
+            { bab: 3, jp: 'かいしゃ', kanji: '会社', romaji: 'kaisha', arti: 'Perusahaan' },
+            { bab: 3, jp: 'うち', kanji: '家', romaji: 'uchi', arti: 'Rumah' },
+            { bab: 3, jp: 'くつ', kanji: '靴', romaji: 'kutsu', arti: 'Sepatu' },
+            { bab: 3, jp: 'ネクタイ', kanji: '', romaji: 'nekutai', arti: 'Dasi' },
+            { bab: 3, jp: 'ワイン', kanji: '', romaji: 'wain', arti: 'Anggur putih' },
+            { bab: 3, jp: 'うりば', kanji: '売り場', romaji: 'uriba', arti: 'Tempat penjualan' },
+            { bab: 3, jp: 'ちか', kanji: '地下', romaji: 'chika', arti: 'Bawah tanah, basement' },
+            { bab: 3, jp: '～かい', kanji: '～階', romaji: '~kai', arti: 'lantai～/ tingkat～' },
+            { bab: 3, jp: 'なんがい', kanji: '何階', romaji: 'nangai', arti: 'Lantai berapa?' },
+            { bab: 3, jp: '～えん', kanji: '～円', romaji: '~en', arti: '～yen' },
+            { bab: 3, jp: 'いくら', kanji: '', romaji: 'ikura', arti: 'Berapa?' },
+            { bab: 3, jp: 'ひゃく', kanji: '百', romaji: 'hyaku', arti: 'Seratus' },
+            { bab: 3, jp: 'せん', kanji: '千', romaji: 'sen', arti: 'Seribu' },
+            { bab: 3, jp: 'まん', kanji: '万', romaji: 'man', arti: 'Puluh ribu' },
+            { bab: 3, jp: 'すみません', kanji: '', romaji: 'sumimasen', arti: 'Maaf' },
+            { bab: 3, jp: 'どうも', kanji: '', romaji: 'doumo', arti: 'Terima kasih' },
+            { bab: 3, jp: 'いらっしゃいませ', kanji: '', romaji: 'irasshaimase', arti: 'Selamat datang' },
+            { bab: 3, jp: 'みせてください', kanji: '見せてください', romaji: 'misete kudasai', arti: 'Tolong perlihatkan' },
+            { bab: 3, jp: 'じゃ', kanji: '', romaji: 'ja', arti: 'Kalau begitu' },
+            { bab: 3, jp: '～をください', kanji: '', romaji: '~wo kudasai', arti: 'Tolong' },
+            { bab: 3, jp: 'イタリア', kanji: '', romaji: 'itaria', arti: 'Italia' },
+            { bab: 3, jp: 'スイス', kanji: '', romaji: 'suisu', arti: 'Swiss' },
+            { bab: 3, jp: 'フランス', kanji: '', romaji: 'furansu', arti: 'Perancis' },
+            { bab: 3, jp: 'ジャカルタ', kanji: '', romaji: 'jakaruta', arti: 'Jakarta' },
+            { bab: 3, jp: 'バンコク', kanji: '', romaji: 'bankoku', arti: 'Bangkok' },
+            { bab: 3, jp: 'ベルリン', kanji: '', romaji: 'berurin', arti: 'Berlin' },
+            { bab: 3, jp: 'おくじょう', kanji: '屋上', romaji: 'okujou', arti: 'Lantai atas' },
+            { bab: 3, jp: 'レストラン', kanji: '', romaji: 'resutoran', arti: 'Restoran' },
+            { bab: 3, jp: 'ゆうえんち', kanji: '遊園地', romaji: 'yuuenchi', arti: 'Tempat hiburan' },
+            { bab: 3, jp: 'もよおしものかいじょう', kanji: '催し物会場', romaji: 'moyoosimono kaijou', arti: 'Tempat pertunjukan' },
+            { bab: 3, jp: 'めがね', kanji: '眼鏡', romaji: 'megane', arti: 'Kacamata' },
+            { bab: 3, jp: 'スポーツようひん', kanji: 'スポーツ用品', romaji: 'supootsu youhin', arti: 'Peralatan olahraga' },
+            { bab: 3, jp: 'りょこうようひん', kanji: '旅行用品', romaji: 'ryokou youhin', arti: 'Peralatan wisata' },
+            { bab: 3, jp: 'こどものふく', kanji: '子供の服', romaji: 'kodomo no fuku', arti: 'Pakaian anak' },
+            { bab: 3, jp: 'おもちゃ', kanji: '', romaji: 'omocha', arti: 'Mainan' },
+            { bab: 3, jp: 'ぶんぽうぐ', kanji: '文房具', romaji: 'bunbougu', arti: 'Alat tulis' },
+            { bab: 3, jp: 'かぐ', kanji: '家具', romaji: 'kagu', arti: 'Perlengkapan rumah' },
+            { bab: 3, jp: 'しょっき', kanji: '食器', romaji: 'shokki', arti: 'Peralatan makan' },
+            { bab: 3, jp: 'でんかせいひん', kanji: '電化製品', romaji: 'denka seihin', arti: 'Barang elektronik' },
+            { bab: 3, jp: 'しんしふく', kanji: '紳士服', romaji: 'shinshi fuku', arti: 'Pakaian pria' },
+            { bab: 3, jp: 'ふじんふく', kanji: '婦人服', romaji: 'fujin fuku', arti: 'Pakaian wanita' },
+            { bab: 3, jp: 'アクセサリー', kanji: '', romaji: 'akusesarii', arti: 'Perhiasan, aksesoris' },
+            { bab: 3, jp: 'げしょうひん', kanji: '化粧品', romaji: 'keshouhin', arti: 'Kosmetik' },
+            { bab: 3, jp: 'しょくひん', kanji: '食品', romaji: 'shokuhin', arti: 'Makanan' },
+            // Bab 4
+            { bab: 4, jp: 'いま', kanji: '今', romaji: 'ima', arti: 'sekarang' },
+            { bab: 4, jp: 'あした', kanji: '明日', romaji: 'ashita', arti: 'besok' },
+            { bab: 4, jp: 'おきます', kanji: '起きます', romaji: 'okimasu', arti: 'Bangun tidur' },
+            { bab: 4, jp: 'ねます', kanji: '寝ます', romaji: 'nemasu', arti: 'Tidur' },
+            { bab: 4, jp: 'はたらきます', kanji: '働きます', romaji: 'hatarakimasu', arti: 'Bekerja' },
+            { bab: 4, jp: 'やすみます', kanji: '休みます', romaji: 'yasumimasu', arti: 'Beristirahat, libur' },
+            { bab: 4, jp: 'べんきょうします', kanji: '勉強します', romaji: 'benkyou shimasu', arti: 'Belajar' },
+            { bab: 4, jp: 'おわります', kanji: '終わります', romaji: 'owarimasu', arti: 'Selesai' },
+            { bab: 4, jp: 'ディパート', kanji: '', romaji: 'depaato', arti: 'Departemen store' },
+            { bab: 4, jp: 'ぎんこう', kanji: '銀行', romaji: 'ginkou', arti: 'Bank' },
+            { bab: 4, jp: 'ゆうびんきょく', kanji: '郵便局', romaji: 'yuubinkyoku', arti: 'Kantor pos' },
+            { bab: 4, jp: 'としょかん', kanji: '図書館', romaji: 'toshokan', arti: 'Perpustakaan' },
+            { bab: 4, jp: 'びじゅつかん', kanji: '美術館', romaji: 'bijutsukan', arti: 'Gedung kesenian' },
+            { bab: 4, jp: 'いま', kanji: '今', romaji: 'ima', arti: 'Sekarang' },
+            { bab: 4, jp: '～じ', kanji: '～時', romaji: '~ji', arti: 'Jam, pukul' },
+            { bab: 4, jp: '～ふん／ぶん', kanji: '～分', romaji: '~fun', arti: 'Menit' },
+            { bab: 4, jp: 'はん', kanji: '半', romaji: 'han', arti: 'Setengah' },
+            { bab: 4, jp: 'なんじ', kanji: '何時', romaji: 'nanji', arti: 'Jam berapa?' },
+            { bab: 4, jp: 'なんぶん', kanji: '何分', romaji: 'nanpun', arti: 'Berapa menit?' },
+            { bab: 4, jp: 'ごぜん', kanji: '午前', romaji: 'gozen', arti: 'AM (waktu sebelum jam 12 siang)' },
+            { bab: 4, jp: 'ごご', kanji: '午後', romaji: 'gogo', arti: 'PM (waktu setelah jam 12 siang)' },
+            { bab: 4, jp: 'あさ', kanji: '朝', romaji: 'asa', arti: 'Pagi' },
+            { bab: 4, jp: 'ひる', kanji: '昼', romaji: 'hiru', arti: 'Siang' },
+            { bab: 4, jp: 'ばん', kanji: '晩', romaji: 'ban', arti: 'Malam' },
+            { bab: 4, jp: 'よる', kanji: '夜', romaji: 'yoru', arti: 'Malam' },
+            { bab: 4, jp: 'おととい', kanji: '一昨日', romaji: 'ototoi', arti: '2 hari yang lalu, kemarin lusa' },
+            { bab: 4, jp: 'きのう', kanji: '昨日', romaji: 'kinou', arti: 'Kemarin' },
+            { bab: 4, jp: 'きょう', kanji: '今日', romaji: 'kyou', arti: 'Hari ini' },
+            { bab: 4, jp: 'あした', kanji: '明日', romaji: 'ashita', arti: 'Besok' },
+            { bab: 4, jp: 'あさって', kanji: '明後日', romaji: 'asatte', arti: 'Besok lusa' },
+            { bab: 4, jp: 'けさ', kanji: '今朝', romaji: 'kesa', arti: 'Tadi pagi' },
+            { bab: 4, jp: 'こんばん', kanji: '今晩', romaji: 'konban', arti: 'Malam ini' },
+            { bab: 4, jp: 'やすみ', kanji: '休み', romaji: 'yasumi', arti: 'Istirahat, cuti, libur' },
+            { bab: 4, jp: 'ひるやすみ', kanji: '昼休み', romaji: 'hiruyasumi', arti: 'Istirahat siang' },
+            { bab: 4, jp: 'しけん', kanji: '試験', romaji: 'shiken', arti: 'Ujian' },
+            { bab: 4, jp: 'かいぎ', kanji: '会議', romaji: 'kaigi', arti: 'Rapat' },
+            { bab: 4, jp: 'えいが', kanji: '映画', romaji: 'eiga', arti: 'Film' },
+            { bab: 4, jp: 'まいあさ', kanji: '毎朝', romaji: 'maiasa', arti: 'Setiap pagi' },
+            { bab: 4, jp: 'まいばん', kanji: '毎晩', romaji: 'maiban', arti: 'Setiap malam' },
+            { bab: 4, jp: 'まいにち', kanji: '毎日', romaji: 'mainichi', arti: 'Setiap hari' },
+            { bab: 4, jp: 'げつようび', kanji: '月曜日', romaji: 'getsuyoubi', arti: 'Hari senin' },
+            { bab: 4, jp: 'かようび', kanji: '曜日', romaji: 'kayoubi', arti: 'Hari selasa' },
+            { bab: 4, jp: 'すいようび', kanji: '水曜日', romaji: 'suiyoubi', arti: 'Hari rabo' },
+            { bab: 4, jp: 'もくようび', kanji: '木曜日', romaji: 'mokuyoubi', arti: 'Hari kamis' },
+            { bab: 4, jp: 'きんようび', kanji: '金曜日', romaji: 'kinyoubi', arti: 'Hari jumat' },
+            { bab: 4, jp: 'どようび', kanji: '土曜日', romaji: 'doyoubi', arti: 'Hari sabtu' },
+            { bab: 4, jp: 'にちようび', kanji: '日曜日', romaji: 'nichiyoubi', arti: 'Hari minggu' },
+            { bab: 4, jp: 'なんようび', kanji: '何曜日', romaji: 'nanyoubi', arti: 'Hari apa?' },
+            { bab: 4, jp: '～から', kanji: '', romaji: '~kara', arti: 'Dari' },
+            { bab: 4, jp: '～まで', kanji: '', romaji: '~made', arti: 'Sampai' },
+            { bab: 4, jp: '～と～', kanji: '', romaji: '~to~', arti: 'Dan' },
+            { bab: 4, jp: 'たいへんですね', kanji: '大変ですね', romaji: 'taihen desu ne', arti: 'Berat ya,' },
+            { bab: 4, jp: 'ばんごう', kanji: '番号', romaji: 'bangou', arti: 'Nomer' },
+            { bab: 4, jp: 'なんばん', kanji: '何番', romaji: 'nanban', arti: 'Nomer berapa?' },
+            { bab: 4, jp: 'ニューヨーク', kanji: '', romaji: 'nyuuyooku', arti: 'New york' },
+            { bab: 4, jp: 'ペキン', kanji: '', romaji: 'pekin', arti: 'Beijing' },
+            { bab: 4, jp: 'ロサンゼルス', kanji: '', romaji: 'rosanzerusu', arti: 'Los angels' },
+            { bab: 4, jp: 'ロンドン', kanji: '', romaji: 'rondon', arti: 'London' },
+            { bab: 4, jp: 'けいさつしょ', kanji: '警察署', romaji: 'keisatsusho', arti: 'Kantor polisi' },
+            { bab: 4, jp: 'しょうぼうしょ', kanji: '消防署', romaji: 'shoubou sho', arti: 'Pemadam kebakaran' },
+            { bab: 4, jp: 'じほう', kanji: '時報', romaji: 'jihou', arti: 'Pemberitahuan waktu' },
+            { bab: 4, jp: 'てんきよほう', kanji: '天気予報', romaji: 'tenki yohou', arti: 'Ramalan cuaca' },
+            { bab: 4, jp: 'でんわばんごうあんない', kanji: '電話番号案内', romaji: 'denwa bangou annai', arti: 'Petunjuk nomor telepon' },
+            { bab: 5, jp: 'いきます', kanji: '行きます', romaji: 'ikimasu', arti: 'Pergi' },
+            { bab: 5, jp: 'きます', kanji: '来ます', romaji: 'kimasu', arti: 'Datang' },
+            { bab: 5, jp: 'かえります', kanji: '帰ります', romaji: 'kaerimasu', arti: 'Pulang' },
+            { bab: 5, jp: 'がっこう', kanji: '学校', romaji: 'gakkou', arti: 'Sekolahan' },
+            { bab: 5, jp: 'スーパー', kanji: '', romaji: 'suupaa', arti: 'Supermarket' },
+            { bab: 5, jp: 'えき', kanji: '駅', romaji: 'eki', arti: 'Stasiun' },
+            { bab: 5, jp: 'ひこうき', kanji: '飛行機', romaji: 'hikouki', arti: 'Pesawat terbang' },
+            { bab: 5, jp: 'ふね', kanji: '船', romaji: 'fune', arti: 'Kapal laut' },
+            { bab: 5, jp: 'でんしゃ', kanji: '電車', romaji: 'densha', arti: 'Kereta listrik' },
+            { bab: 5, jp: 'ちかてつ', kanji: '地下鉄', romaji: 'chikatetsu', arti: 'Kereta bawah tanah' },
+            { bab: 5, jp: 'しんかんせん', kanji: '新幹線', romaji: 'shinkansen', arti: 'Shinkansen' },
+            { bab: 5, jp: 'バス', kanji: '', romaji: 'basu', arti: 'Bus' },
+            { bab: 5, jp: 'タクシー', kanji: '', romaji: 'takushii', arti: 'Taksi' },
+            { bab: 5, jp: 'じてんしゃ', kanji: '自転車', romaji: 'jitensha', arti: 'Sepeda' },
+            { bab: 5, jp: 'あるいて', kanji: '歩いて', romaji: 'aruite', arti: 'Jalan kaki' },
+            { bab: 5, jp: 'ひと', kanji: '人', romaji: 'hito', arti: 'Orang' },
+            { bab: 5, jp: 'ともだち', kanji: '友達', romaji: 'tomodachi', arti: 'Teman' },
+            { bab: 5, jp: 'かれ', kanji: '彼', romaji: 'kare', arti: 'Dia (laki-laki)' },
+            { bab: 5, jp: 'かのじょ', kanji: '彼女', romaji: 'kanojo', arti: 'Dia (perempuan)' },
+            { bab: 5, jp: 'かぞく', kanji: '家族', romaji: 'kazoku', arti: 'Keluarga' },
+            { bab: 5, jp: 'ひとりで', kanji: '一人で', romaji: 'hitori de', arti: 'Sendirian' },
+            { bab: 5, jp: 'せんしゅう', kanji: '先週', romaji: 'senshuu', arti: 'Minggu lalu' },
+            { bab: 5, jp: 'こんしゅう', kanji: '今週', romaji: 'konshuu', arti: 'Minggu ini' },
+            { bab: 5, jp: 'らいしゅう', kanji: '来週', romaji: 'raishuu', arti: 'Minggu depan' },
+            { bab: 5, jp: 'せんげつ', kanji: '先月', romaji: 'sengetsu', arti: 'Bulan lalu' },
+            { bab: 5, jp: 'こんげつ', kanji: '今月', romaji: 'kongetsu', arti: 'Bulan ini' },
+            { bab: 5, jp: 'らいげつ', kanji: '来月', romaji: 'raigetsu', arti: 'Bulan depan' },
+            { bab: 5, jp: 'きょねん', kanji: '去年', romaji: 'kyonen', arti: 'Tahun lalu' },
+            { bab: 5, jp: 'ことし', kanji: '今年', romaji: 'kotoshi', arti: 'Tahun ini' },
+            { bab: 5, jp: 'らいねん', kanji: '来年', romaji: 'rainen', arti: 'Tahun depan' },
+            { bab: 5, jp: '～ねん', kanji: '～年', romaji: '~nen', arti: 'Tahun' },
+            { bab: 5, jp: 'なんねん', kanji: '何年', romaji: 'nannen', arti: 'Tahun berapa?' },
+            { bab: 5, jp: '～がつ', kanji: '～月', romaji: '~gatsu', arti: 'Bulan' },
+            { bab: 5, jp: 'なんがつ', kanji: '何月', romaji: 'nangatsu', arti: 'Bulan apa?' },
+            { bab: 5, jp: 'ついたち', kanji: '一日', romaji: 'tsuitachi', arti: 'Tanggal 1' },
+            { bab: 5, jp: 'ふつか', kanji: '二日', romaji: 'futsuka', arti: 'Tanggal 2, 2 hari' },
+            { bab: 5, jp: 'みっか', kanji: '三日', romaji: 'mikka', arti: 'Tanggal 3, 3 hari' },
+            { bab: 5, jp: 'よっか', kanji: '四日', romaji: 'yokka', arti: 'Tanggal 4, 4 hari' },
+            { bab: 5, jp: 'いっか', kanji: '五日', romaji: 'itsuka', arti: 'Tanggal 5, 5 hari' },
+            { bab: 5, jp: 'むいか', kanji: '六日', romaji: 'muika', arti: 'Tanggal 6, 6 hari' },
+            { bab: 5, jp: 'なのか', kanji: '七日', romaji: 'nanoka', arti: 'Tanggal 7, 7 hari' },
+            { bab: 5, jp: 'ようか', kanji: '八日', romaji: 'youka', arti: 'Tanggal 8, 8 hari' },
+            { bab: 5, jp: 'ここのか', kanji: '九日', romaji: 'kokonoka', arti: 'Tanggal 9, 9 hari' },
+            { bab: 5, jp: 'とおか', kanji: '十日', romaji: 'tooka', arti: 'Tanggal 10, 10 hari' },
+            { bab: 5, jp: 'じゅうよっか', kanji: '十四日', romaji: 'juuyokka', arti: 'Tanggal 14, 14 hari' },
+            { bab: 5, jp: 'はつか', kanji: '二十日', romaji: 'hatsuka', arti: 'Tanggal 20, 20 hari' },
+            { bab: 5, jp: 'にじゅうよっか', kanji: '二十四日', romaji: 'nijuuyokka', arti: 'Tanggal 24, 24 hari' },
+            { bab: 5, jp: '～にち', kanji: '～日', romaji: '~nichi', arti: 'Tanggal, hari' },
+            { bab: 5, jp: 'なんにち', kanji: '何日', romaji: 'nannichi', arti: 'Tanggal berapa, berapa hari' },
+            { bab: 5, jp: 'いつ', kanji: '', romaji: 'itsu', arti: 'Kapan' },
+            { bab: 5, jp: 'たんじょうび', kanji: '誕生日', romaji: 'tanjoubi', arti: 'Hari ulang tahun' },
+            { bab: 5, jp: 'そうですね', kanji: '', romaji: 'sou desu ne', arti: 'Ya begitulah' },
+            { bab: 5, jp: 'どういたしまして', kanji: '', romaji: 'dou itashimashite', arti: 'Sama-sama' },
+            { bab: 5, jp: '～ばんせん', kanji: '～番線', romaji: '~bansen', arti: 'Peron nomor, jalur nomor' },
+            { bab: 5, jp: 'つぎの', kanji: '次の', romaji: 'tsugi no', arti: 'Yang berikutnya' },
+            { bab: 5, jp: 'ふつう', kanji: '普通', romaji: 'futsuu', arti: 'Biasa' },
+            { bab: 5, jp: 'きゅうこう', kanji: '急行', romaji: 'kyuukou', arti: 'Ekspres' },
+            { bab: 5, jp: 'とっきゅう', kanji: '特急', romaji: 'tokkyuu', arti: 'Super ekspres' },
+            { bab: 5, jp: 'しゅくさいじつ', kanji: '祝祭日', romaji: 'shukusaijitsu', arti: 'Hari libur nasional' },
+            { bab: 5, jp: 'がんじつ', kanji: '元日', romaji: 'ganjitsu', arti: 'Tahun baru' },
+            { bab: 5, jp: 'せいじんのひ', kanji: '成人の日', romaji: 'seijin no hi', arti: 'Hari perayaan menjadi dewasa' },
+            { bab: 5, jp: 'けんこくきねんのひ', kanji: '建国記念の日', romaji: 'kenkoku kinen no hi', arti: 'Hari pembangunan nasional' },
+            { bab: 5, jp: 'しゅんぶんのひ', kanji: '春分の日', romaji: 'shunbun no hi', arti: 'Hari equinox pada musim semi' },
+            { bab: 5, jp: 'しょうわのひ', kanji: '昭和の日', romaji: 'shouwa no hi', arti: 'Hari showa' },
+            { bab: 5, jp: 'けんぽうきねんび', kanji: '憲法記念日', romaji: 'kenpou kinenbi', arti: 'Hari peringatan konstitusi' },
+            { bab: 5, jp: 'みどりのひ', kanji: '', romaji: 'midori no hi', arti: 'Hari penghijauan' },
+            { bab: 5, jp: 'こどものひ', kanji: '', romaji: 'kodomo no hi', arti: 'Hari anak' },
+            { bab: 5, jp: 'うみのひ', kanji: '海の日', romaji: 'umi no hi', arti: 'Hari bahari' },
+            { bab: 5, jp: 'やまのひ', kanji: '山の日', romaji: 'yama no hi', arti: 'Hari gunung' },
+            { bab: 5, jp: 'けいろうのひ', kanji: '敬老の日', romaji: 'keirou no hi', arti: 'Hari hormat kepada orang tua' },
+            { bab: 5, jp: 'しゅうぶんのひ', kanji: '秋分の日', romaji: 'shuubun no hi', arti: 'Hari equinox pada musim gugur' },
+            { bab: 5, jp: 'たいいくのひ', kanji: '体育の日', romaji: 'taiiku no hi', arti: 'Hari kesehatan olahraga' },
+            { bab: 5, jp: 'ぶんかのひ', kanji: '文化の日', romaji: 'bunka no hi', arti: 'Hari kebudayaan' },
+            { bab: 5, jp: 'きんろうかんしゃのひ', kanji: '勤労感謝の日', romaji: 'kinrou kansha no hi', arti: 'Hari bersyukur untuk pekerjaan' },
+            { bab: 5, jp: 'てんのうたんじょうび', kanji: '天皇誕生日', romaji: 'tennou tanjoubi', arti: 'Hari ulang tahun kaisar' },
+
+            // Bab 5
+            { bab: 5, jp: 'いく', kanji: '行く', romaji: 'iku', arti: 'pergi' },
+            { bab: 5, jp: 'くる', kanji: '来る', romaji: 'kuru', arti: 'datang' },
+            // Bab 6
+            { bab: 6, jp: 'たべる', kanji: '食べる', romaji: 'taberu', arti: 'makan' },
+            { bab: 6, jp: 'のむ', kanji: '飲む', romaji: 'nomu', arti: 'minum' },
+            { bab: 6, jp: 'たべます', kanji: '食べます', romaji: 'tabemasu', arti: 'Makan' },
+            { bab: 6, jp: 'のみます', kanji: '飲みます', romaji: 'nomimasu', arti: 'Minum' },
+            { bab: 6, jp: 'すいます', kanji: '吸います', romaji: 'suimasu', arti: 'Menghisap / merokok' },
+            { bab: 6, jp: 'みます', kanji: '見ます', romaji: 'mimasu', arti: 'Melihat / menonton' },
+            { bab: 6, jp: 'ききます', kanji: '聞きます', romaji: 'kikimasu', arti: 'Mendengar' },
+            { bab: 6, jp: 'よみます', kanji: '読みます', romaji: 'yomimasu', arti: 'Membaca' },
+            { bab: 6, jp: 'かきます', kanji: '書きます', romaji: 'kakimasu', arti: 'Menulis / menggambar' },
+            { bab: 6, jp: 'かいます', kanji: '買います', romaji: 'kaimasu', arti: 'Membeli' },
+            { bab: 6, jp: 'とります', kanji: '撮ります', romaji: 'torimasu', arti: 'Mengambil (foto) / memotret' },
+            { bab: 6, jp: 'します', kanji: '', romaji: 'shimasu', arti: 'Melakukan / mengerjakan / berbuat' },
+            { bab: 6, jp: 'あいます', kanji: '会います', romaji: 'aimasu', arti: 'Bertemu' },
+            { bab: 6, jp: 'ごはん', kanji: 'ご飯', romaji: 'gohan', arti: 'Nasi' },
+            { bab: 6, jp: 'あさごはん', kanji: '朝ご飯', romaji: 'asagohan', arti: 'Makan pagi / sarapan' },
+            { bab: 6, jp: 'ひるごはん', kanji: '昼ご飯', romaji: 'hirugohan', arti: 'Makan siang' },
+            { bab: 6, jp: 'ばんごはん', kanji: '晩ご飯', romaji: 'bangohan', arti: 'Makan malam' },
+            { bab: 6, jp: 'パン', kanji: '', romaji: 'pan', arti: 'Roti' },
+            { bab: 6, jp: 'たまご', kanji: '卵', romaji: 'tamago', arti: 'Telur' },
+            { bab: 6, jp: 'にく', kanji: '肉', romaji: 'niku', arti: 'Daging' },
+            { bab: 6, jp: 'さかな', kanji: '魚', romaji: 'sakana', arti: 'Ikan' },
+            { bab: 6, jp: 'やさい', kanji: '野菜', romaji: 'yasai', arti: 'Sayuran' },
+            { bab: 6, jp: 'くだもの', kanji: '果物', romaji: 'kudamono', arti: 'Buah-buahan' },
+            { bab: 6, jp: 'みず', kanji: '水', romaji: 'mizu', arti: 'Air' },
+            { bab: 6, jp: 'おちゃ', kanji: 'お茶', romaji: 'ocha', arti: 'Teh jepang / teh hijau' },
+            { bab: 6, jp: 'こうちゃ', kanji: '紅茶', romaji: 'koucha', arti: 'Teh' },
+            { bab: 6, jp: 'ぎゅうにゅう', kanji: '牛乳', romaji: 'gyuunyuu', arti: 'Susu' },
+            { bab: 6, jp: 'ジュース', kanji: '', romaji: 'juusu', arti: 'Jus' },
+            { bab: 6, jp: 'ビール', kanji: '', romaji: 'biiru', arti: 'Bir' },
+            { bab: 6, jp: 'おさけ', kanji: 'お酒', romaji: 'osake', arti: 'Minuman keras' },
+            { bab: 6, jp: 'たばこ', kanji: '', romaji: 'tabako', arti: 'Rokok' },
+            { bab: 6, jp: 'てがみ', kanji: '手紙', romaji: 'tegami', arti: 'Surat' },
+            { bab: 6, jp: 'レポート', kanji: '', romaji: 'repooto', arti: 'Laporan' },
+            { bab: 6, jp: 'しゃしん', kanji: '写真', romaji: 'shashin', arti: 'Foto' },
+            { bab: 6, jp: 'ビデオ', kanji: '', romaji: 'bideo', arti: 'Kaset video' },
+            { bab: 6, jp: 'みせ', kanji: '店', romaji: 'mise', arti: 'Toko' },
+            { bab: 6, jp: 'にわ', kanji: '庭', romaji: 'niwa', arti: 'Halaman' },
+            { bab: 6, jp: 'しゅくだい', kanji: '宿題', romaji: 'shukudai', arti: 'Pekerjaan rumah / PR' },
+            { bab: 6, jp: 'テニス', kanji: '', romaji: 'tenisu', arti: 'Tenis' },
+            { bab: 6, jp: 'サッカー', kanji: '', romaji: 'sakkaa', arti: 'Sepak bola' },
+            { bab: 6, jp: 'はなみ', kanji: '花見', romaji: 'hanami', arti: 'Hanami (menikmati bunga sakura)' },
+            { bab: 6, jp: 'なに', kanji: '何', romaji: 'nani', arti: 'Apa' },
+            { bab: 6, jp: 'いっしょに', kanji: '一緒に', romaji: 'issho ni', arti: 'Bersama-sama' },
+            { bab: 6, jp: 'ちょっと', kanji: '', romaji: 'chotto', arti: 'Sebentar / sedikit' },
+            { bab: 6, jp: 'いつも', kanji: '', romaji: 'itsumo', arti: 'Selalu' },
+            { bab: 6, jp: 'ときどき', kanji: '時々', romaji: 'tokidoki', arti: 'Kadang-kadang' },
+            { bab: 6, jp: 'それから', kanji: '', romaji: 'sore kara', arti: 'Setelah itu / kemudian' },
+            { bab: 6, jp: 'ええ', kanji: '', romaji: 'ee', arti: 'Ya' },
+            { bab: 6, jp: 'いいですね', kanji: '', romaji: 'ii desu ne', arti: 'Bagus ya / baik ya' },
+            { bab: 6, jp: 'わかりました', kanji: '分かりました', romaji: 'wakarimashita', arti: 'Mengerti / baik' },
+            { bab: 6, jp: 'じゃ、また', kanji: '', romaji: 'ja, mata', arti: 'Ok, sampai jumpa besok' },
+            { bab: 6, jp: 'メキシコ', kanji: '', romaji: 'mekishiko', arti: 'Meksiko' },
+            { bab: 6, jp: 'きゅうり', kanji: '', romaji: 'kyuuri', arti: 'Timun' },
+            { bab: 6, jp: 'トマト', kanji: '', romaji: 'tomato', arti: 'Tomat' },
+            { bab: 6, jp: 'なす', kanji: '', romaji: 'nasu', arti: 'Terong' },
+            { bab: 6, jp: 'まめ', kanji: '豆', romaji: 'mame', arti: 'Kacang-kacangan' },
+            { bab: 6, jp: 'キャベツ', kanji: '', romaji: 'kyabetsu', arti: 'Kol' },
+            { bab: 6, jp: 'ねぎ', kanji: '', romaji: 'negi', arti: 'Daun bawang' },
+            { bab: 6, jp: 'はくさい', kanji: '白菜', romaji: 'hakusai', arti: 'Sawi' },
+            { bab: 6, jp: 'ほうれんそう', kanji: '', romaji: 'hourensou', arti: 'Bayam' },
+            { bab: 6, jp: 'レタス', kanji: '', romaji: 'retasu', arti: 'Letas' },
+            { bab: 6, jp: 'じゃがいも', kanji: '', romaji: 'jagaimo', arti: 'Kentang' },
+            { bab: 6, jp: 'だいこん', kanji: '大根', romaji: 'daikon', arti: 'Lobak' },
+            { bab: 6, jp: 'たまねぎ', kanji: '玉ねぎ', romaji: 'tamanegi', arti: 'Bawang' },
+            { bab: 6, jp: 'にんじん', kanji: '人参', romaji: 'ninjin', arti: 'Wortel' },
+            { bab: 6, jp: 'いちご', kanji: '', romaji: 'ichigo', arti: 'Stroberi' },
+            { bab: 6, jp: 'もも', kanji: '桃', romaji: 'momo', arti: 'Buah peach' },
+            { bab: 6, jp: 'すいか', kanji: '西瓜', romaji: 'suika', arti: 'Semangka' },
+            { bab: 6, jp: 'ぶどう', kanji: '', romaji: 'budou', arti: 'Anggur' },
+            { bab: 6, jp: 'なし', kanji: '梨', romaji: 'nashi', arti: 'Pir' },
+            { bab: 6, jp: 'かき', kanji: '柿', romaji: 'kaki', arti: 'Kesemek' },
+            { bab: 6, jp: 'みかん', kanji: '', romaji: 'mikan', arti: 'Jeruk' },
+            { bab: 6, jp: 'りんご', kanji: '林檎', romaji: 'ringo', arti: 'Apel' },
+            { bab: 6, jp: 'バナナ', kanji: '', romaji: 'banana', arti: 'Pisang' },
+            { bab: 6, jp: 'ぎゅうにく', kanji: '牛肉', romaji: 'gyuuniku', arti: 'Daging sapi' },
+            { bab: 6, jp: 'とりにく', kanji: '鳥肉', romaji: 'toriniku', arti: 'Daging ayam' },
+            { bab: 6, jp: 'ぶたにく', kanji: '豚肉', romaji: 'butaniku', arti: 'Daging babi' },
+            { bab: 6, jp: 'ソーセージ', kanji: '', romaji: 'sooseeji', arti: 'Sosis' },
+            { bab: 6, jp: 'ハム', kanji: '', romaji: 'hamu', arti: 'Ham' },
+            { bab: 6, jp: 'あじ', kanji: '', romaji: 'aji', arti: 'Ikan mackerel' },
+            { bab: 6, jp: 'いわし', kanji: '', romaji: 'iwashi', arti: 'Ikan sarden' },
+            { bab: 6, jp: 'さば', kanji: '', romaji: 'saba', arti: 'Ikan kembung' },
+            { bab: 6, jp: 'さんま', kanji: '', romaji: 'sanma', arti: 'Ikan sauri pasifik' },
+            { bab: 6, jp: 'さけ', kanji: '鮭', romaji: 'sake', arti: 'Ikan salmon' },
+            { bab: 6, jp: 'まぐろ', kanji: '', romaji: 'maguro', arti: 'Ikan tuna' },
+            { bab: 6, jp: 'たい', kanji: '鯛', romaji: 'tai', arti: 'Ikan kakap' },
+            { bab: 6, jp: 'たら', kanji: '鱈', romaji: 'tara', arti: 'Ikan gabus' },
+            { bab: 6, jp: 'えび', kanji: '海老', romaji: 'ebi', arti: 'Udang' },
+            { bab: 6, jp: 'かに', kanji: '蟹', romaji: 'kani', arti: 'Kepiting' },
+            { bab: 6, jp: 'いか', kanji: '烏賊', romaji: 'ika', arti: 'Cumi-cumi' },
+            { bab: 6, jp: 'たこ', kanji: '蛸', romaji: 'tako', arti: 'Gurita' },
+            { bab: 6, jp: 'こめ', kanji: '米', romaji: 'kome', arti: 'Beras' },
+            // Bab 7
+            { bab: 7, jp: 'よむ', kanji: '読む', romaji: 'yomu', arti: 'membaca' },
+            { bab: 7, jp: 'かく', kanji: '書く', romaji: 'kaku', arti: 'menulis' },
+            { bab: 7, jp: 'きります', kanji: '切ります', romaji: 'kirimasu', arti: 'Memotong / menggunting' },
+            { bab: 7, jp: 'おくります', kanji: '送ります', romaji: 'okurimasu', arti: 'Mengirim' },
+            { bab: 7, jp: 'あげます', kanji: '', romaji: 'agemasu', arti: 'Memberikan' },
+            { bab: 7, jp: 'もらいます', kanji: '', romaji: 'moraimasu', arti: 'Menerima / mendapatkan' },
+            { bab: 7, jp: 'かします', kanji: '貸します', romaji: 'kashimasu', arti: 'Meminjamkan / menyewakan' },
+            { bab: 7, jp: 'かります', kanji: '借ります', romaji: 'karimasu', arti: 'Meminjam / menyewa' },
+            { bab: 7, jp: 'おしえます', kanji: '教えます', romaji: 'oshiemasu', arti: 'Mengajar' },
+            { bab: 7, jp: 'ならいます', kanji: '習います', romaji: 'naraimasu', arti: 'Belajar (kepada)' },
+            { bab: 7, jp: 'かけます', kanji: '', romaji: 'kakemasu', arti: 'Menelpon' },
+            { bab: 7, jp: 'て', kanji: '手', romaji: 'te', arti: 'Tangan' },
+            { bab: 7, jp: 'はし', kanji: '', romaji: 'hashi', arti: 'Sumpit' },
+            { bab: 7, jp: 'スプーン', kanji: '', romaji: 'supuun', arti: 'Sendok' },
+            { bab: 7, jp: 'ナイフ', kanji: '', romaji: 'naifu', arti: 'Pisau' },
+            { bab: 7, jp: 'フォーク', kanji: '', romaji: 'fooku', arti: 'Garpu' },
+            { bab: 7, jp: 'はさみ', kanji: '', romaji: 'hasami', arti: 'Gunting' },
+            { bab: 7, jp: 'バソコン', kanji: '', romaji: 'basokon', arti: 'Laptop' },
+            { bab: 7, jp: 'ケータイ', kanji: '', romaji: 'keetai', arti: 'HP' },
+            { bab: 7, jp: 'メール', kanji: '', romaji: 'meeru', arti: 'Email' },
+            { bab: 7, jp: 'ねんがじょう', kanji: '年賀状', romaji: 'nengajou', arti: 'Kartu tahun baru' },
+            { bab: 7, jp: 'パンチ', kanji: '', romaji: 'panchi', arti: 'Pelubang kertas' },
+            { bab: 7, jp: 'ホッチキス', kanji: '', romaji: 'hotchikisu', arti: 'Stapler' },
+            { bab: 7, jp: 'セロテープ', kanji: '', romaji: 'seroteepu', arti: 'Selotip' },
+            { bab: 7, jp: 'けしゴム', kanji: '消しゴム', romaji: 'keshigomu', arti: 'Penghapus karet' },
+            { bab: 7, jp: 'かみ', kanji: '紙', romaji: 'kami', arti: 'Kertas' },
+            { bab: 7, jp: 'はな', kanji: '花', romaji: 'hana', arti: 'Bunga' },
+            { bab: 7, jp: 'シャツ', kanji: '', romaji: 'shatsu', arti: 'Kemeja' },
+            { bab: 7, jp: 'プレゼント', kanji: '', romaji: 'purezento', arti: 'Hadiah / kado' },
+            { bab: 7, jp: 'にもつ', kanji: '荷物', romaji: 'nimotsu', arti: 'Barang' },
+            { bab: 7, jp: 'おかね', kanji: 'お金', romaji: 'okane', arti: 'Uang' },
+            { bab: 7, jp: 'きっぷ', kanji: '切符', romaji: 'kippu', arti: 'Karcis' },
+            { bab: 7, jp: 'クリスマス', kanji: '', romaji: 'kurisumasu', arti: 'Natal' },
+            { bab: 7, jp: 'ちち', kanji: '父', romaji: 'chichi', arti: 'Ayah' },
+            { bab: 7, jp: 'はは', kanji: '母', romaji: 'haha', arti: 'Ibu' },
+            { bab: 7, jp: 'おとうさん', kanji: 'お父さん', romaji: 'otousan', arti: 'Ayah orang lain' },
+            { bab: 7, jp: 'おかあさん', kanji: 'お母さん', romaji: 'okaasan', arti: 'Ibu orang lain' },
+            { bab: 7, jp: 'もう', kanji: '', romaji: 'mou', arti: 'Sudah' },
+            { bab: 7, jp: 'まだ', kanji: '', romaji: 'mada', arti: 'Belum' },
+            { bab: 7, jp: 'これから', kanji: '', romaji: 'korekara', arti: 'Mulai dari sekarang' },
+            { bab: 7, jp: 'すてきですね', kanji: '', romaji: 'suteki desu ne', arti: 'Bagus ya / indah ya' },
+            { bab: 7, jp: 'いらっしゃい', kanji: '', romaji: 'irasshai', arti: 'Selamat datang' },
+            { bab: 7, jp: 'どうぞおあがりください', kanji: '', romaji: 'douzo oagari kudasai', arti: 'Silakan masuk' },
+            { bab: 7, jp: 'しつれいします', kanji: '失礼します', romaji: 'shitsurei shimasu', arti: 'Permisi' },
+            { bab: 7, jp: '～いかがですか', kanji: '', romaji: '~ikaga desu ka', arti: 'Bagaimana ? (menawarkan sesuatu kepada orang)' },
+            { bab: 7, jp: 'いただきます', kanji: '', romaji: 'itadakimasu', arti: 'Selamat makan' },
+            { bab: 7, jp: 'ごちそうさまでした', kanji: '', romaji: 'gochisousama deshita', arti: 'Terima kasih atas hidangannya' },
+            { bab: 7, jp: 'スペイン', kanji: '', romaji: 'supein', arti: 'Spanyol' },
+            { bab: 7, jp: 'かぞく', kanji: '家族', romaji: 'kazoku', arti: 'Keluarga' },
+            { bab: 7, jp: 'そば', kanji: '祖母', romaji: 'soba', arti: 'Nenek' },
+            { bab: 7, jp: 'そふ', kanji: '祖父', romaji: 'sofu', arti: 'Kakek' },
+            { bab: 7, jp: 'そふほ', kanji: '祖父母', romaji: 'sofubo', arti: 'Kakek nenek' },
+            { bab: 7, jp: 'りょうしん', kanji: '両親', romaji: 'ryoushin', arti: 'Orang tua' },
+            { bab: 7, jp: 'いもうと', kanji: '妹', romaji: 'imouto', arti: 'Adik perempuan' },
+            { bab: 7, jp: 'おとうと', kanji: '弟', romaji: 'otouto', arti: 'Adik laki-laki' },
+            { bab: 7, jp: 'あね', kanji: '姉', romaji: 'ane', arti: 'Kakak perempuan' },
+            { bab: 7, jp: 'あに', kanji: '兄', romaji: 'ani', arti: 'Kakak laki-laki' },
+            { bab: 7, jp: 'きょうだい', kanji: '兄弟', romaji: 'kyoudai', arti: 'Saudara kandung' },
+            { bab: 7, jp: 'つま', kanji: '妻', romaji: 'tsuma', arti: 'Istri' },
+            { bab: 7, jp: 'おっと', kanji: '夫', romaji: 'otto', arti: 'Suami' },
+            { bab: 7, jp: 'ふうふ', kanji: '夫婦', romaji: 'fuufu', arti: 'Pasangan suami istri' },
+            { bab: 7, jp: 'むすめ', kanji: '娘', romaji: 'musume', arti: 'Anak perempuan' },
+            { bab: 7, jp: 'むすこ', kanji: '息子', romaji: 'musuko', arti: 'Anak laki-laki' },
+            { bab: 7, jp: 'こども', kanji: '子供', romaji: 'kodomo', arti: 'Anak' },
+            { bab: 7, jp: 'おばあさん', kanji: '', romaji: 'obaasan', arti: 'Nenek (orang lain)' },
+            { bab: 7, jp: 'おじいさん', kanji: '', romaji: 'ojiisan', arti: 'Kakek (orang lain)' },
+            { bab: 7, jp: 'ごりょうしん', kanji: '', romaji: 'goryoushin', arti: 'Orang tua (orang lain)' },
+            { bab: 7, jp: 'いもうとさん', kanji: '', romaji: 'imoutosan', arti: 'Adik perempuan (orang lain)' },
+            { bab: 7, jp: 'おとうとさん', kanji: '', romaji: 'otoutosan', arti: 'Adik laki-laki (orang lain)' },
+            { bab: 7, jp: 'おねえさん', kanji: '', romaji: 'oneesan', arti: 'Kakak perempuan (orang lain)' },
+            { bab: 7, jp: 'おにいさん', kanji: '', romaji: 'oniisan', arti: 'Kakak laki-laki (orang lain)' },
+            { bab: 7, jp: 'ごきょうだい', kanji: '', romaji: 'gokyoudai', arti: 'Saudara kandung (orang lain)' },
+            { bab: 7, jp: 'おくさん', kanji: '', romaji: 'okusan', arti: 'Istri (orang lain)' },
+            { bab: 7, jp: 'ごふうふ', kanji: '', romaji: 'gofuufu', arti: 'Pasangan suami istri (orang lain)' },
+            { bab: 7, jp: 'むすめさん', kanji: '', romaji: 'musumesan', arti: 'Anak perempuan (orang lain)' },
+            { bab: 7, jp: 'むすこさん', kanji: '', romaji: 'musukosan', arti: 'Anak laki-laki (orang lain)' },
+            { bab: 7, jp: 'おこさん', kanji: '', romaji: 'okosan', arti: 'Anak (orang lain)' },
+            { bab: 8, jp: 'ハンサム', kanji: '', romaji: 'hansamu', arti: 'Tampan / gagah / ganteng' },
+            { bab: 8, jp: 'きれい', kanji: '', romaji: 'kirei', arti: 'Cantik / bersih' },
+            { bab: 8, jp: 'しずか', kanji: '静香(な)', romaji: 'shizuka', arti: 'Sunyi / tenang' },
+            { bab: 8, jp: 'にぎやか', kanji: '', romaji: 'nigiyaka', arti: 'Ramai' },
+            { bab: 8, jp: 'ゆうめい', kanji: '有名(な)', romaji: 'yuumei', arti: 'Terkenal' },
+            { bab: 8, jp: 'しんせつ', kanji: '新設(な)', romaji: 'shinsetsu', arti: 'Baik hati' },
+            { bab: 8, jp: 'げんき', kanji: '元気(な)', romaji: 'genki', arti: 'Sehat' },
+            { bab: 8, jp: 'ひま', kanji: '暇(な)', romaji: 'hima', arti: 'Senggang' },
+            { bab: 8, jp: 'べんり', kanji: '便利(な)', romaji: 'benri', arti: 'Praktis' },
+            { bab: 8, jp: 'すてき', kanji: '', romaji: 'suteki', arti: 'Bagus' },
+            { bab: 8, jp: 'おおきい', kanji: '大きい', romaji: 'ookii', arti: 'Besar' },
+            { bab: 8, jp: 'ちいさい', kanji: '小さい', romaji: 'chiisai', arti: 'Kecil' },
+            { bab: 8, jp: 'あたらしい', kanji: '新しい', romaji: 'atarashii', arti: 'Baru' },
+            { bab: 8, jp: 'ふるい', kanji: '古い', romaji: 'furui', arti: 'Lama / tua' },
+            { bab: 8, jp: 'いい', kanji: '', romaji: 'ii', arti: 'Baik / bagus' },
+            { bab: 8, jp: 'わるい', kanji: '悪い', romaji: 'warui', arti: 'Jelek' },
+            { bab: 8, jp: 'あつい', kanji: '暑い', romaji: 'atsui', arti: 'Panas' },
+            { bab: 8, jp: 'さむい', kanji: '寒い', romaji: 'samui', arti: 'Dingin suhu' },
+            { bab: 8, jp: 'つめたい', kanji: '冷たい', romaji: 'tsumetai', arti: 'Dingin benda' },
+            { bab: 8, jp: 'むずかしい', kanji: '難しい', romaji: 'muzukashii', arti: 'Sulit / susah' },
+            { bab: 8, jp: 'やさしい', kanji: '易しい', romaji: 'yasashii', arti: 'Mudah / gampang' },
+            { bab: 8, jp: 'たかい', kanji: '高い', romaji: 'takai', arti: 'Mahal / tinggi' },
+            { bab: 8, jp: 'やすい', kanji: '安い', romaji: 'yasui', arti: 'Murah' },
+            { bab: 8, jp: 'ひくい', kanji: '低い', romaji: 'hikui', arti: 'Rendah' },
+            { bab: 8, jp: 'おもしろい', kanji: '', romaji: 'omoshiroi', arti: 'Menarik' },
+            { bab: 8, jp: 'おいしい', kanji: '', romaji: 'oishii', arti: 'Enak' },
+            { bab: 8, jp: 'いそがしい', kanji: '忙しい', romaji: 'isogashii', arti: 'Sibuk' },
+            { bab: 8, jp: 'たのしい', kanji: '楽しい', romaji: 'tanoshii', arti: 'Senang' },
+            { bab: 8, jp: 'しろい', kanji: '白い', romaji: 'shiroi', arti: 'Putih' },
+            { bab: 8, jp: 'くろい', kanji: '黒い', romaji: 'kuroi', arti: 'Hitam' },
+            { bab: 8, jp: 'あかい', kanji: '赤い', romaji: 'akai', arti: 'Merah' },
+            { bab: 8, jp: 'あおい', kanji: '青い', romaji: 'aoi', arti: 'Biru' },
+            { bab: 8, jp: 'さくら', kanji: '桜', romaji: 'sakura', arti: 'Sakura' },
+            { bab: 8, jp: 'やま', kanji: '山', romaji: 'yama', arti: 'Gunung' },
+            { bab: 8, jp: 'まち', kanji: '町', romaji: 'machi', arti: 'Kota' },
+            { bab: 8, jp: 'たべもの', kanji: '食べ物', romaji: 'tabemono', arti: 'Makanan' },
+            { bab: 8, jp: 'ところ', kanji: '所', romaji: 'tokoro', arti: 'Tempat' },
+            { bab: 8, jp: 'りょう', kanji: '寮', romaji: 'ryou', arti: 'Asrama' },
+            { bab: 8, jp: 'レストラン', kanji: '', romaji: 'resutoran', arti: 'Restoran' },
+            { bab: 8, jp: 'せいかつ', kanji: '生活', romaji: 'seikatsu', arti: 'Kehidupan' },
+            { bab: 8, jp: 'しごと', kanji: '仕事', romaji: 'shigoto', arti: 'Pekerjaan' },
+            { bab: 8, jp: 'どう', kanji: '', romaji: 'dou', arti: 'Bagaimana?' },
+            { bab: 8, jp: 'どんな', kanji: '', romaji: 'donna', arti: 'Yang bagaimana?' },
+            { bab: 8, jp: 'とても', kanji: '', romaji: 'totemo', arti: 'Sangat / "sekali' },
+            { bab: 8, jp: 'あまり', kanji: '', romaji: 'amari', arti: 'Tidak begitu ~ / kurang begitu ~' },
+            { bab: 8, jp: 'そして', kanji: '', romaji: 'soshite', arti: 'Kemudian' },
+            { bab: 8, jp: '～が', kanji: '', romaji: '~ga', arti: 'Tetapi' },
+            { bab: 8, jp: 'おげんきですか', kanji: 'お元気ですか', romaji: 'ogenki desu ka', arti: 'Apa kabar?' },
+            { bab: 8, jp: 'そうですね', kanji: '', romaji: 'sou desu ne', arti: 'Bagaimana ya?' },
+            { bab: 8, jp: '～もういっぱいいかがですか', kanji: '', romaji: '~mou ippai ikaga desu ka', arti: 'Mau nambah secangkir lagi?' },
+            { bab: 8, jp: 'けっこうです', kanji: '', romaji: 'kekkou desu', arti: 'Cukup' },
+            { bab: 8, jp: 'そろそろしつれいします', kanji: 'そろそろ失礼します', romaji: 'sorosoro shitsurei shimasu', arti: 'Maaf saya mau pamit dulu' },
+            { bab: 8, jp: 'いいえ', kanji: '', romaji: 'iie', arti: 'Sama-sama' },
+            { bab: 8, jp: 'またいらっしゃってください', kanji: '', romaji: 'mata irasshatte kudasai', arti: 'Silakan datang lagi' },
+            { bab: 8, jp: 'シャンハイ', kanji: '', romaji: 'shanhai', arti: 'Shanghai' },
+            { bab: 8, jp: 'みどり', kanji: '', romaji: 'midori', arti: 'Hijau' },
+            { bab: 8, jp: 'むらさき', kanji: '', romaji: 'murasaki', arti: 'Ungu' },
+            { bab: 8, jp: 'きいろい', kanji: '', romaji: 'kiiroi', arti: 'Kuning' },
+            { bab: 8, jp: 'ちゃいろい', kanji: '', romaji: 'chairoi', arti: 'coklat' },
+            { bab: 8, jp: 'ピンク', kanji: '', romaji: 'pinku', arti: 'Merah muda' },
+            { bab: 8, jp: 'オレンジ', kanji: '', romaji: 'orenji', arti: 'Oranye' },
+            { bab: 8, jp: 'グレー', kanji: '', romaji: 'guree', arti: 'Abu-abu' },
+            { bab: 8, jp: 'ベージュ', kanji: '', romaji: 'beeju', arti: 'krem' },
+            { bab: 8, jp: 'はる', kanji: '春', romaji: 'haru', arti: 'Musim semi' },
+            { bab: 8, jp: 'なつ', kanji: '夏', romaji: 'natsu', arti: 'Musim panas' },
+            { bab: 8, jp: 'あき', kanji: '秋', romaji: 'aki', arti: 'Musim gugur' },
+            
+            // Bab 8
+            { bab: 8, jp: 'きれい', kanji: '綺麗', romaji: 'kirei', arti: 'cantik / bersih' },
+            { bab: 8, jp: 'しずか', kanji: '静か', romaji: 'shizuka', arti: 'tenang' },
+            // Bab 9
+            { bab: 9, jp: 'すき', kanji: '好き', romaji: 'suki', arti: 'suka' },
+            { bab: 9, jp: 'きらい', kanji: '嫌い', romaji: 'kirai', arti: 'benci' },
+            { bab: 8, jp: 'ふゆ', kanji: '冬', romaji: 'fuyu', arti: 'Musim dingin' },
+            { bab: 9, jp: 'わかります', kanji: '分かります', romaji: 'wakarimasu', arti: 'Mengerti' },
+            { bab: 9, jp: 'あります', kanji: '', romaji: 'arimasu', arti: 'Ada / mempunyai' },
+            { bab: 9, jp: 'すき', kanji: '好き', romaji: 'suki', arti: 'Suka, gemar' },
+            { bab: 9, jp: 'きらい', kanji: '嫌い', romaji: 'kirai', arti: 'Benci' },
+            { bab: 9, jp: 'じょうず', kanji: '上手', romaji: 'jouzu', arti: 'Pandai, pintar' },
+            { bab: 9, jp: 'へた', kanji: '下手', romaji: 'heta', arti: 'Tidak pandai, tidak pintar, bodoh' },
+            { bab: 9, jp: 'のみもの', kanji: '飲み物', romaji: 'nomimono', arti: 'Minuman' },
+            { bab: 9, jp: 'りょうり', kanji: '料理', romaji: 'ryouri', arti: 'Masakan' },
+            { bab: 9, jp: 'スポーツ', kanji: '', romaji: 'supo-tsu', arti: 'Olahraga' },
+            { bab: 9, jp: 'やきゅう', kanji: '野球', romaji: 'yakyuu', arti: 'Baseball' },
+            { bab: 9, jp: 'ダンス', kanji: '', romaji: 'dansu', arti: 'Dansa' },
+            { bab: 9, jp: 'りょこう', kanji: '旅行', romaji: 'ryokou', arti: 'Tamasya' },
+            { bab: 9, jp: 'おんがく', kanji: '音楽', romaji: 'ongaku', arti: 'Musik' },
+            { bab: 9, jp: 'うた', kanji: '歌', romaji: 'uta', arti: 'Lagu' },
+            { bab: 9, jp: 'クラシック', kanji: '', romaji: 'kurashikku', arti: 'Klasik' },
+            { bab: 9, jp: 'ジャズ', kanji: '', romaji: 'jazu', arti: 'Jaz' },
+            { bab: 9, jp: 'コンサート', kanji: '', romaji: 'konsa-to', arti: 'Konser' },
+            { bab: 9, jp: 'カラオケ', kanji: '', romaji: 'karaoke', arti: 'Karaoke' },
+            { bab: 9, jp: 'かぶき', kanji: '歌舞伎', romaji: 'kabuki', arti: 'Kabuki (drama tradisional jepang)' },
+            { bab: 9, jp: 'え', kanji: '絵', romaji: 'e', arti: 'Gambar' },
+            { bab: 9, jp: 'じ', kanji: '字', romaji: 'ji', arti: 'Huruf' },
+            { bab: 9, jp: 'かんじ', kanji: '漢字', romaji: 'kanji', arti: 'Kanji' },
+            { bab: 9, jp: 'ひらがな', kanji: '', romaji: 'hiragana', arti: 'Hiragana' },
+            { bab: 9, jp: 'かたかな', kanji: '', romaji: 'katakana', arti: 'Katakana' },
+            { bab: 9, jp: 'ローマじ', kanji: 'ローマ字', romaji: 'ro-maji', arti: 'Huruf latin' },
+            { bab: 9, jp: 'こまかいおかね', kanji: '細かいお金', romaji: 'komakai okane', arti: 'Uang kecil, reche' },
+            { bab: 9, jp: 'チケット', kanji: '', romaji: 'chiketto', arti: 'Tiket' },
+            { bab: 9, jp: 'じかん', kanji: '時間', romaji: 'jikan', arti: 'Waktu' },
+            { bab: 9, jp: 'ようじ', kanji: '用事', romaji: 'youji', arti: 'Urusan' },
+            { bab: 9, jp: 'やくそく', kanji: '約束', romaji: 'yakusoku', arti: 'Janji' },
+            { bab: 9, jp: 'アルバイト', kanji: '', romaji: 'arubaito', arti: 'Kerja paruh waktu' },
+            { bab: 9, jp: 'ごしゅじん', kanji: 'ご主人', romaji: 'goshujin', arti: 'Suami orang lain' },
+            { bab: 9, jp: 'おっと', kanji: '夫', romaji: 'otto', arti: 'Suami' },
+            { bab: 9, jp: 'おくさん', kanji: '奥さん', romaji: 'okusan', arti: 'Istri orang lain' },
+            { bab: 9, jp: 'つま', kanji: '妻', romaji: 'tsuma', arti: 'Istri' },
+            { bab: 9, jp: 'こども', kanji: '子供', romaji: 'kodomo', arti: 'Anak' },
+            { bab: 9, jp: 'よく', kanji: '', romaji: 'yoku', arti: 'Dengan baik' },
+            { bab: 9, jp: 'だいたい', kanji: '', romaji: 'daitai', arti: 'Kira-kira' },
+            { bab: 9, jp: 'たくさん', kanji: '', romaji: 'takusan', arti: 'Banyak' },
+            { bab: 9, jp: 'すこし', kanji: '少し', romaji: 'sukoshi', arti: 'Sedikit' },
+            { bab: 9, jp: 'ぜんぜん', kanji: '全然', romaji: 'zenzen', arti: 'Sama sekali' },
+            { bab: 9, jp: 'はやく', kanji: '早く', romaji: 'hayaku', arti: 'Dengan Cepat' },
+            { bab: 9, jp: '～から', kanji: '', romaji: '~kara', arti: 'Karena' },
+            { bab: 9, jp: 'どうして', kanji: '', romaji: 'doushite', arti: 'Kenapa' },
+            { bab: 9, jp: 'かしてください', kanji: '貸してください', romaji: 'kashite kudasai', arti: 'Tolong pinjamkan' },
+            { bab: 9, jp: 'いいですよ', kanji: '', romaji: 'ii desu yo', arti: 'Boleh' },
+            { bab: 9, jp: 'さんねんです', kanji: '残念です', romaji: 'zannen desu', arti: 'Sayang sekali' },
+            { bab: 9, jp: 'いっしょにいかがですか', kanji: '', romaji: 'issho ni ikaga desu ka', arti: 'Bagaimana kalau bersama-sama' },
+            { bab: 9, jp: 'ちょっと', kanji: '', romaji: 'chotto', arti: 'Maaf, saya tidak bisa' },
+            { bab: 9, jp: 'だめですか', kanji: '', romaji: 'dame desu ka', arti: 'Tidak bisa ya / tidak boleh ya' },
+            { bab: 9, jp: 'またこんどおねがいします', kanji: 'また今度お願いします', romaji: 'mata kondo onegai shimasu', arti: 'Maaf lain kali saja' },
+            { bab: 9, jp: 'ポップス', kanji: '', romaji: 'poppusu', arti: 'Pop' },
+            { bab: 9, jp: 'ロック', kanji: '', romaji: 'rokku', arti: 'Rock' },
+            { bab: 9, jp: 'ラテン', kanji: '', romaji: 'raten', arti: 'Musik latin' },
+            { bab: 9, jp: 'えんか', kanji: '演歌', romaji: 'enka', arti: 'Lagu tradisional jepang populer' },
+            { bab: 9, jp: 'ミュージカル', kanji: '', romaji: 'myuujikaru', arti: 'Drama musikal' },
+            { bab: 9, jp: 'オペラ', kanji: '', romaji: 'opera', arti: 'Opera' },
+            { bab: 9, jp: 'ホラー', kanji: '', romaji: 'horaa', arti: 'Film horor' },
+            { bab: 9, jp: 'アニメ', kanji: '', romaji: 'anime', arti: 'Film kartun , animasi' },
+            { bab: 9, jp: 'ドキュメンタリー', kanji: '', romaji: 'dokyumentarii', arti: 'Film dokumentasi' },
+            { bab: 9, jp: 'ミステリー', kanji: '', romaji: 'misuterii', arti: 'Film misteri' },
+            { bab: 9, jp: 'ぶんげい', kanji: '文芸', romaji: 'bungei', arti: 'Film kesusastraan' },
+            { bab: 9, jp: 'せんそう', kanji: '戦争', romaji: 'sensou', arti: 'Film peperangan' },
+            { bab: 9, jp: 'アクション', kanji: '', romaji: 'akushon', arti: 'Film action' },
+            { bab: 9, jp: 'きげき', kanji: '喜劇', romaji: 'kigeki', arti: 'Film komedi' },
+            { bab: 9, jp: 'ソフトボール', kanji: '', romaji: 'sofutobooru', arti: 'Softball' },
+            { bab: 9, jp: 'サッカー', kanji: '', romaji: 'sakkaa', arti: 'Sepak bola' },
+            { bab: 9, jp: 'ラグビー', kanji: '', romaji: 'ragubii', arti: 'Rugby' },
+            { bab: 9, jp: 'バレーボール', kanji: '', romaji: 'bareebooru', arti: 'Voli' },
+            { bab: 9, jp: 'テニス', kanji: '', romaji: 'tenisu', arti: 'Tenis' },
+            { bab: 9, jp: 'ボウリング', kanji: '', romaji: 'bouringu', arti: 'Bowling' },
+            { bab: 9, jp: 'スキー', kanji: '', romaji: 'sukii', arti: 'Sky' },
+            { bab: 9, jp: 'スケート', kanji: '', romaji: 'sukeeto', arti: 'Skate' },
+            { bab: 9, jp: 'たっきゅう', kanji: '卓球', romaji: 'takkyuu', arti: 'Pingpong' },
+            { bab: 9, jp: 'すもう', kanji: '相撲', romaji: 'sumou', arti: 'Sumo' },
+            { bab: 9, jp: 'じゅうどう', kanji: '柔道', romaji: 'juudou', arti: 'Judo' },
+            { bab: 9, jp: 'けんどう', kanji: '剣道', romaji: 'kendou', arti: 'Kendo' },
+            { bab: 9, jp: 'すいえい', kanji: '水泳', romaji: 'suiei', arti: 'Renang' },
+            // Bab 10
+            { bab: 10, jp: 'いる', kanji: '居る', romaji: 'iru', arti: 'ada (makhluk)' },
+            { bab: 10, jp: 'ある', kanji: '有る', romaji: 'aru', arti: 'ada (benda)' },
+            { bab: 10, jp: 'あります', kanji: '', romaji: 'arimasu', arti: 'Ada (benda mati)' },
+            { bab: 10, jp: 'います', kanji: '', romaji: 'imasu', arti: 'Ada (benda hidup)' },
+            { bab: 10, jp: 'いろいろ', kanji: '', romaji: 'iroiro', arti: 'Berbagai / macam-macam' },
+            { bab: 10, jp: 'おとこのひと', kanji: '男の人', romaji: 'otoko no hito', arti: 'Orang laki-laki' },
+            { bab: 10, jp: 'おんなのひと', kanji: '女の人', romaji: 'onna no hito', arti: 'Orang perempuan' },
+            { bab: 10, jp: 'おとこのこ', kanji: '男の子', romaji: 'otoko no ko', arti: 'Anak laki-laki' },
+            { bab: 10, jp: 'おんなのこ', kanji: '女の子', romaji: 'onna no ko', arti: 'Anak perempuan' },
+            { bab: 10, jp: 'いぬ', kanji: '犬', romaji: 'inu', arti: 'Anjing' },
+            { bab: 10, jp: 'ねこ', kanji: '猫', romaji: 'neko', arti: 'Kucing' },
+            { bab: 10, jp: 'バンダ', kanji: '', romaji: 'banda', arti: 'Panda' },
+            { bab: 10, jp: 'ぞう', kanji: '像', romaji: 'zou', arti: 'Gajah' },
+            { bab: 10, jp: 'き', kanji: '木', romaji: 'ki', arti: 'Pohon' },
+            { bab: 10, jp: 'もの', kanji: '物', romaji: 'mono', arti: 'Barang' },
+            { bab: 10, jp: 'でんち', kanji: '電池', romaji: 'denchi', arti: 'Baterai' },
+            { bab: 10, jp: 'はこ', kanji: '箱', romaji: 'hako', arti: 'Kotak' },
+            { bab: 10, jp: 'スイッチ', kanji: '', romaji: 'suitchi', arti: 'Saklar' },
+            { bab: 10, jp: 'れいぞうこ', kanji: '冷蔵庫', romaji: 'reizouko', arti: 'Kulkas' },
+            { bab: 10, jp: 'テーブル', kanji: '', romaji: 'teeburu', arti: 'Meja makan' },
+            { bab: 10, jp: 'ベッド', kanji: '', romaji: 'beddo', arti: 'Tempat tidur' },
+            { bab: 10, jp: 'たな', kanji: '棚', romaji: 'tana', arti: 'Lemari' },
+            { bab: 10, jp: 'ドア', kanji: '', romaji: 'doa', arti: 'Pintu' },
+            { bab: 10, jp: 'まど', kanji: '窓', romaji: 'mado', arti: 'Jendela' },
+            { bab: 10, jp: 'ポスト', kanji: '', romaji: 'posuto', arti: 'Kotak surat' },
+            { bab: 10, jp: 'ビル', kanji: '', romaji: 'biru', arti: 'Gedung' },
+            { bab: 10, jp: 'ATM', kanji: '', romaji: 'ATM', arti: 'Atm' },
+            { bab: 10, jp: 'コンビニ', kanji: '', romaji: 'konbini', arti: 'Toko 24 jam' },
+            { bab: 10, jp: 'こうえん', kanji: '公園', romaji: 'kouen', arti: 'Taman' },
+            { bab: 10, jp: 'きっさてん', kanji: '喫茶店', romaji: 'kissaten', arti: 'Coffe shop / cafe' },
+            { bab: 10, jp: '～や', kanji: '～屋', romaji: '~ya', arti: 'Toko ~' },
+            { bab: 10, jp: 'のりば', kanji: '乗り場', romaji: 'noriba', arti: 'Tempat naik' },
+            { bab: 10, jp: 'けん', kanji: '県', romaji: 'ken', arti: 'Prefektur' },
+            { bab: 10, jp: 'うえ', kanji: '上', romaji: 'ue', arti: 'Atas' },
+            { bab: 10, jp: 'した', kanji: '下', romaji: 'shita', arti: 'Bawah' },
+            { bab: 10, jp: 'まえ', kanji: '前', romaji: 'mae', arti: 'Depan' },
+            { bab: 10, jp: 'うしろ', kanji: '後ろ', romaji: 'ushiro', arti: 'Belakang' },
+            { bab: 10, jp: 'みぎ', kanji: '右', romaji: 'migi', arti: 'Kanan' },
+            { bab: 10, jp: 'ひだり', kanji: '左', romaji: 'hidari', arti: 'Kiri' },
+            { bab: 10, jp: 'なか', kanji: '中', romaji: 'naka', arti: 'Dalam' },
+            { bab: 10, jp: 'そと', kanji: '外', romaji: 'soto', arti: 'Luar' },
+            { bab: 10, jp: 'となり', kanji: '隣', romaji: 'tonari', arti: 'Sampling / sebelah' },
+            { bab: 10, jp: 'ちかく', kanji: '近く', romaji: 'chikaku', arti: 'Dekat' },
+            { bab: 10, jp: 'あいだ', kanji: '間', romaji: 'aida', arti: 'Antara' },
+            { bab: 10, jp: 'どうもすみません', kanji: '', romaji: 'doumo sumimasen', arti: 'Maaf / terima kasih banyak' },
+            { bab: 10, jp: 'ナンブラー', kanji: '', romaji: 'nanburaa', arti: 'Kecap ikan' },
+            { bab: 10, jp: 'コーナー', kanji: '', romaji: 'koonaa', arti: 'Tempat / bagian penjualan' },
+            { bab: 10, jp: 'いちばんした', kanji: '一番下', romaji: 'ichiban shita', arti: 'Paling bawah' },
+            { bab: 10, jp: 'げんかん', kanji: '玄関', romaji: 'genkan', arti: 'Pintu masuk' },
+            { bab: 10, jp: 'ふろば', kanji: '風呂場', romaji: 'furoba', arti: 'Kamar mandi' },
+            { bab: 10, jp: 'せんめんじょ', kanji: '洗面所', romaji: 'senmenjo', arti: 'Tempat cuci tangan' },
+            { bab: 10, jp: 'だいどころ', kanji: '台所', romaji: 'daidokoro', arti: 'Dapur' },
+            { bab: 10, jp: 'しょくどう', kanji: '食堂', romaji: 'shokudou', arti: 'Kantin / ruang makan' },
+            { bab: 10, jp: 'いま', kanji: '居間', romaji: 'ima', arti: 'Ruang tamu' },
+            { bab: 10, jp: 'しんしつ', kanji: '寝室', romaji: 'shinshitsu', arti: 'Kamar tidur' },
+            { bab: 10, jp: 'ろうか', kanji: '廊下', romaji: 'rouka', arti: 'Koridor' },
+            { bab: 10, jp: 'ベランダ', kanji: '', romaji: 'beranda', arti: 'teras' },
+            // Bab 11
+            { bab: 11, jp: 'ひと', kanji: '人', romaji: 'hito', arti: 'orang' },
+            { bab: 11, jp: 'ともだち', kanji: '友達', romaji: 'tomodachi', arti: 'teman' },
+            { bab: 11, jp: 'います', kanji: '', romaji: 'imasu', arti: 'Ada / mempunyai' },
+            { bab: 11, jp: 'かかります', kanji: '', romaji: 'kakarimasu', arti: 'Memerlukan waktu' },
+            { bab: 11, jp: 'やすみます', kanji: '休みます', romaji: 'yasumimasu', arti: 'Tidak masuk kerja / libur' },
+            { bab: 11, jp: 'ひとつ', kanji: '', romaji: 'hitotsu', arti: '1 buah' },
+            { bab: 11, jp: 'ふたつ', kanji: '', romaji: 'futatsu', arti: '2 buah' },
+            { bab: 11, jp: 'みっつ', kanji: '', romaji: 'mittsu', arti: '3 buah' },
+            { bab: 11, jp: 'よつつ', kanji: '', romaji: 'yottsu', arti: '4 buah' },
+            { bab: 11, jp: 'いつつ', kanji: '', romaji: 'itsutsu', arti: '5 buah' },
+            { bab: 11, jp: 'むつつ', kanji: '', romaji: 'muttsu', arti: '6 buah' },
+            { bab: 11, jp: 'ななつ', kanji: '', romaji: 'nanatsu', arti: '7 buah' },
+            { bab: 11, jp: 'やっつ', kanji: '', romaji: 'yattsu', arti: '8 buah' },
+            { bab: 11, jp: 'ここのつ', kanji: '', romaji: 'kokonotsu', arti: '9 buah' },
+            { bab: 11, jp: 'とお', kanji: '', romaji: 'too', arti: '10 buah' },
+            { bab: 11, jp: 'いくつ', kanji: '', romaji: 'ikutsu', arti: 'Berapa buah?' },
+            { bab: 11, jp: 'ひとり', kanji: '', romaji: 'hitori', arti: '1 orang' },
+            { bab: 11, jp: 'ふたり', kanji: '', romaji: 'futari', arti: '2 orang' },
+            { bab: 11, jp: '～にん', kanji: '～人', romaji: '~nin', arti: '~ orang' },
+            { bab: 11, jp: '～だい', kanji: '～台', romaji: '~dai', arti: '~ unit' },
+            { bab: 11, jp: '～まい', kanji: '～枚', romaji: '~mai', arti: '~ lembar' },
+            { bab: 11, jp: '～かい', kanji: '～回', romaji: '~kai', arti: '~ kali' },
+            { bab: 11, jp: 'りんご', kanji: '', romaji: 'ringo', arti: 'Apel' },
+            { bab: 11, jp: 'みかん', kanji: '', romaji: 'mikan', arti: 'Jeruk' },
+            { bab: 11, jp: 'サンドイッチ', kanji: '', romaji: 'sandoicchi', arti: 'Sandwich' },
+            { bab: 11, jp: 'カレー', kanji: '', romaji: 'karee', arti: 'Kare' },
+            { bab: 11, jp: 'アイスクリーム', kanji: '', romaji: 'aisukuriimu', arti: 'Es krim' },
+            { bab: 11, jp: 'きって', kanji: '切手', romaji: 'kitte', arti: 'Perangka' },
+            { bab: 11, jp: 'はがき', kanji: '', romaji: 'hagaki', arti: 'Kartu pos' },
+            { bab: 11, jp: 'ふうとう', kanji: '封筒', romaji: 'fuutou', arti: 'Amplop' },
+            { bab: 11, jp: 'がいこく', kanji: '外国', romaji: 'gaikoku', arti: 'Luar negeri' },
+            { bab: 11, jp: 'りゅうがくせい', kanji: '留学生', romaji: 'ryuugakusei', arti: 'Pelajar asing' },
+            { bab: 11, jp: 'クラス', kanji: '', romaji: 'kurasu', arti: 'Kelas' },
+            { bab: 11, jp: '～じかん', kanji: '～時間', romaji: '~jikan', arti: '~ jam' },
+            { bab: 11, jp: '～しゅうかん', kanji: '～週間', romaji: '~shuukan', arti: '~minggu' },
+            { bab: 11, jp: '～かげつ', kanji: '～か月', romaji: '~kagetsu', arti: '~bulan' },
+            { bab: 11, jp: '～ねん', kanji: '～年', romaji: '~nen', arti: '~tahun' },
+            { bab: 11, jp: '～ぐらい', kanji: '', romaji: '~gurai', arti: 'Kira-kira ~' },
+            { bab: 11, jp: 'どのくらい', kanji: '', romaji: 'dono kurai', arti: 'Berapa lama?' },
+            { bab: 11, jp: 'ぜんぶで', kanji: '全部で', romaji: 'zenbu de', arti: 'Semuanya' },
+            { bab: 11, jp: 'みんな', kanji: '', romaji: 'minna', arti: 'Semua' },
+            { bab: 11, jp: '～だけ', kanji: '', romaji: '~dake', arti: 'Hanya ~' },
+            { bab: 11, jp: 'かしこまりました', kanji: '', romaji: 'kashikomarimashita', arti: 'Baik / mengerti' },
+            { bab: 11, jp: 'いいてんきですね', kanji: 'いい天気ですね', romaji: 'ii tenki desu ne', arti: 'Cucanya bagus ya...' },
+            { bab: 11, jp: 'おでかけですか', kanji: 'お出かけですか', romaji: 'odekake desu ka', arti: 'Mau keluar ?' },
+            { bab: 11, jp: 'いってらっしゃい', kanji: '行ってらっしゃい', romaji: 'itterasshai', arti: 'Hati-hati (berangkatnya)' },
+            { bab: 11, jp: 'いってきます', kanji: '行ってきます', romaji: 'ittekimasu', arti: 'Saya berangkat' },
+            { bab: 11, jp: 'ふなびん', kanji: '船便', romaji: 'funabin', arti: 'Pos laut' },
+            { bab: 11, jp: 'こうくうびん', kanji: '航空便', romaji: 'koukuubin', arti: 'Pos udara' },
+            { bab: 11, jp: 'エアメール', kanji: '', romaji: 'eameeru', arti: 'Pos udara' },
+            { bab: 11, jp: 'オーストラリア', kanji: '', romaji: 'oosutoraria', arti: 'Australia' },
+            { bab: 11, jp: 'ていしょく', kanji: '定食', romaji: 'teishoku', arti: 'Makanan paket' },
+            { bab: 11, jp: 'ランチ', kanji: '', romaji: 'ranchi', arti: 'Makan siang' },
+            { bab: 11, jp: 'てんどん', kanji: '天どん', romaji: 'tendon', arti: 'Semangkuk Nasi dan tempura' },
+            { bab: 11, jp: 'おやこどん', kanji: 'おやこどん', romaji: 'oyakodon', arti: 'Semangkuk Nasi, daging ayam dan telur' },
+            { bab: 11, jp: 'ぎゅうどん', kanji: '牛どん', romaji: 'gyuudon', arti: 'Semangkuk nasi dan daging sapi' },
+            { bab: 11, jp: 'やきにく', kanji: '焼肉', romaji: 'yakiniku', arti: 'Daging panggang' },
+            { bab: 11, jp: 'やさいため', kanji: '野菜ため', romaji: 'yasaitame', arti: 'Sayur goreng' },
+            { bab: 11, jp: 'つけもの', kanji: '漬物', romaji: 'tsukemono', arti: 'Asinan' },
+            { bab: 11, jp: 'みそしる', kanji: 'みそ汁', romaji: 'misoshiru', arti: 'Sup miso' },
+            { bab: 11, jp: 'おにぎり', kanji: '', romaji: 'onigiri', arti: 'Nasi kepal' },
+            { bab: 11, jp: 'てんぷら', kanji: '', romaji: 'tempura', arti: 'Tempura' },
+            { bab: 11, jp: 'すし', kanji: '', romaji: 'sushi', arti: 'Nasi dicampur cuka dan diberi ikan mentah' },
+            { bab: 11, jp: 'うどん', kanji: '', romaji: 'udon', arti: 'Mie jepang ukuran besar' },
+            { bab: 11, jp: 'そば', kanji: '', romaji: 'soba', arti: 'Mie jepang warna abu-abu' },
+            { bab: 11, jp: 'ラーメン', kanji: '', romaji: 'raamen', arti: 'Mie jepang ukuran biasa' },
+            { bab: 11, jp: 'やきそば', kanji: '焼きそば', romaji: 'yakisoba', arti: 'Mie goreng jepang' },
+            { bab: 11, jp: 'おこのみやき', kanji: 'お好み焼き', romaji: 'okonomiyaki', arti: 'Gorengan dicampur daging di loyang' },
+            { bab: 11, jp: 'カレーライス', kanji: '', romaji: 'kareeraisu', arti: 'Nasi kare' },
+            { bab: 11, jp: 'ハンバーグ', kanji: '', romaji: 'hanbaagu', arti: 'hamburger' },
+            { bab: 11, jp: 'コロッケ', kanji: '', romaji: 'korokke', arti: 'Kroket' },
+            { bab: 11, jp: 'えびフライ', kanji: '', romaji: 'ebi furai', arti: 'Udang goreng tepung' },
+            { bab: 11, jp: 'フライドチキン', kanji: '', romaji: 'furaido chikin', arti: 'Ayam goreng' },
+            { bab: 11, jp: 'サラダ', kanji: '', romaji: 'sarada', arti: 'Salad' },
+            { bab: 11, jp: 'スープ', kanji: '', romaji: 'suupu', arti: 'Sup' },
+            { bab: 11, jp: 'スパゲッティ', kanji: '', romaji: 'supagetti', arti: 'Spageti' },
+            { bab: 11, jp: 'ピザ', kanji: '', romaji: 'piza', arti: 'Pizza' },
+            { bab: 11, jp: 'トースト', kanji: '', romaji: 'toosuto', arti: 'Roti panggang' },
+            { bab: 11, jp: 'コーヒー', kanji: '', romaji: 'koohii', arti: 'Kopi' },
+            { bab: 11, jp: 'こうちゃ', kanji: '紅茶', romaji: 'koucha', arti: 'Teh' },
+            { bab: 11, jp: 'ココア', kanji: '', romaji: 'kokoa', arti: 'Minuman coklat' },
+            { bab: 11, jp: 'ジュース', kanji: '', romaji: 'juusu', arti: 'Jus' },
+            { bab: 11, jp: 'コーラ', kanji: '', romaji: 'koora', arti: 'Coca cola' },
+            // Bab 12
+            { bab: 12, jp: 'ふたり', kanji: '二人', romaji: 'futari', arti: 'dua orang' },
+            { bab: 12, jp: 'みんな', kanji: '皆', romaji: 'minna', arti: 'semua' },
+            // Bab 13
+            { bab: 13, jp: 'のこる', kanji: '残る', romaji: 'nokoru', arti: 'tinggal' },
+            { bab: 13, jp: 'かえる', kanji: '帰る', romaji: 'kaeru', arti: 'pulang' },
+            // Bab 14
+            { bab: 14, jp: 'てつだう', kanji: '手伝う', romaji: 'tetsudau', arti: 'membantu' },
+            { bab: 14, jp: 'まつ', kanji: '待つ', romaji: 'matsu', arti: 'menunggu' },
+            { bab: 14, jp: 'つけます', kanji: '', romaji: 'tsukemasu', arti: 'Menyalakan, memasang, menghidupkan' },
+            { bab: 14, jp: 'けします', kanji: '消します', romaji: 'keshimasu', arti: 'Mematikan, memadamkan' },
+            { bab: 14, jp: 'あけます', kanji: '開けます', romaji: 'akemasu', arti: 'Membuka' },
+            { bab: 14, jp: 'しめます', kanji: '閉めます', romaji: 'shimemasu', arti: 'Menutup' },
+            { bab: 14, jp: 'いそぎます', kanji: '急ぎます', romaji: 'isogimasu', arti: 'Buru-buru' },
+            { bab: 14, jp: 'まちます', kanji: '待ちます', romaji: 'machimasu', arti: 'Menunggu' },
+            { bab: 14, jp: 'もちます', kanji: '持ちます', romaji: 'mochimasu', arti: 'Membawa' },
+            { bab: 14, jp: 'とります', kanji: '取ります', romaji: 'torimasu', arti: 'Mengambil' },
+            { bab: 14, jp: 'てつだいます', kanji: '手伝います', romaji: 'tetsudaimasu', arti: 'Membantu' },
+            { bab: 14, jp: 'よびます', kanji: '呼びます', romaji: 'yobimasu', arti: 'Memanggil' },
+            { bab: 14, jp: 'はなします', kanji: '話します', romaji: 'hanashimasu', arti: 'Berbicara' },
+            { bab: 14, jp: 'つかいます', kanji: '使います', romaji: 'tsukaimasu', arti: 'Memakai' },
+            { bab: 14, jp: 'とめます', kanji: '止めます', romaji: 'tomemasu', arti: 'Menghentikan' },
+            { bab: 14, jp: 'みせます', kanji: '見せます', romaji: 'misemasu', arti: 'Memperlihatkan' },
+            { bab: 14, jp: 'おしえます', kanji: '教えます', romaji: 'oshiemasu', arti: 'Memberitahu' },
+            { bab: 14, jp: 'すわります', kanji: '座ります', romaji: 'suwarimasu', arti: 'Duduk' },
+            { bab: 14, jp: 'たちます', kanji: '立ちます', romaji: 'tachimasu', arti: 'Berdiri' },
+            { bab: 14, jp: 'はいります', kanji: '入ります', romaji: 'hairimasu', arti: 'Masuk' },
+            { bab: 14, jp: 'でます', kanji: '出ます', romaji: 'demasu', arti: 'Keluar' },
+            { bab: 14, jp: 'ふります', kanji: '降ります', romaji: 'furimasu', arti: 'Turun hujan' },
+            { bab: 14, jp: 'コピーします', kanji: '', romaji: 'kopi shimasu', arti: 'Memfotocopy' },
+            { bab: 14, jp: 'でんき', kanji: '電気', romaji: 'denki', arti: 'Listrik, lampu' },
+            { bab: 14, jp: 'エアコン', kanji: '', romaji: 'eakon', arti: 'AC' },
+            { bab: 14, jp: 'バスポート', kanji: '', romaji: 'basupooto', arti: 'Paspor' },
+            { bab: 14, jp: 'なまえ', kanji: '名前', romaji: 'namae', arti: 'Nama' },
+            { bab: 14, jp: 'じゅうしょ', kanji: '住所', romaji: 'juusho', arti: 'Alamat' },
+            { bab: 14, jp: 'ちず', kanji: '地図', romaji: 'chizu', arti: 'Peta' },
+            { bab: 14, jp: 'しお', kanji: '塩', romaji: 'shio', arti: 'Garam' },
+            { bab: 14, jp: 'さとう', kanji: '佐藤', romaji: 'satou', arti: 'Gula' },
+            { bab: 14, jp: 'もんだい', kanji: '問題', romaji: 'mondai', arti: 'Masalah, soal' },
+            { bab: 14, jp: 'こたえ', kanji: '答え', romaji: 'kotae', arti: 'Jawaban' },
+            { bab: 14, jp: 'よみかた', kanji: '読み方', romaji: 'yomikata', arti: 'Cara membaca' },
+            { bab: 14, jp: '～かた', kanji: '～方', romaji: '~kata', arti: 'Cara~' },
+            { bab: 14, jp: 'まっすぐ', kanji: '', romaji: 'massugu', arti: 'Lurus' },
+            { bab: 14, jp: 'ゆっくり', kanji: '', romaji: 'yukkuri', arti: 'Pelan-pelan, istirahat dengan baik' },
+            { bab: 14, jp: 'すぐ', kanji: '', romaji: 'sugu', arti: 'Segera, langsung' },
+            { bab: 14, jp: 'また', kanji: '', romaji: 'mata', arti: 'Lagi' },
+            { bab: 14, jp: 'あとで', kanji: '', romaji: 'atode', arti: 'Nanti' },
+            { bab: 14, jp: 'もうすこし', kanji: 'もう少し', romaji: 'mou sukoshi', arti: 'Sedikit lagi' },
+            { bab: 14, jp: 'もう～', kanji: '', romaji: 'mou~', arti: '~lagi' },
+            { bab: 14, jp: 'さあ', kanji: '', romaji: 'saa', arti: 'Mari' },
+            { bab: 14, jp: 'あれ？', kanji: '', romaji: 'are?', arti: 'Ah (saat heran atau kaget)' },
+            { bab: 14, jp: 'これでおねがいします', kanji: 'これでお願いします', romaji: 'kore de onegai shimasu', arti: 'Minta dengan ini' },
+            { bab: 14, jp: 'おつり', kanji: 'お釣り', romaji: 'otsuri', arti: 'Kembalian' },
+            { bab: 14, jp: 'きっぷうりば', kanji: '切符売り場', romaji: 'kippu uriba', arti: 'Loket penjualan karcis' },
+            { bab: 14, jp: 'じどうけんばいき', kanji: '自動券売機', romaji: 'jidou kenbaiki', arti: 'Mesin karcis otomatis' },
+            { bab: 14, jp: 'せいさんき', kanji: '精算機', romaji: 'seisan ki', arti: 'Alat penghitung otomatis' },
+            { bab: 14, jp: 'かいさつぐち', kanji: '改札口', romaji: 'kaisatsu guchi', arti: 'Pintu pemeriksaan karcis' },
+            { bab: 14, jp: 'でぐち', kanji: '出口', romaji: 'deguchi', arti: 'Pintu keluar' },
+            { bab: 14, jp: 'いりぐち', kanji: '入口', romaji: 'iriguchi', arti: 'Pintu masuk' },
+            { bab: 14, jp: 'ひがしぐち', kanji: '東口', romaji: 'higashiguchi', arti: 'Pintu timur' },
+            { bab: 14, jp: 'にしぐち', kanji: '西口', romaji: 'nishiguchi', arti: 'Pintu barat' },
+            { bab: 14, jp: 'みなみぐち', kanji: '南口', romaji: 'minamiguchi', arti: 'Pintu selatan' },
+            { bab: 14, jp: 'きたぐち', kanji: '北口', romaji: 'kitaguchi', arti: 'Pintu utara' },
+            { bab: 14, jp: 'ちゅうおうぐち', kanji: '中央口', romaji: 'chuuouguchi', arti: 'Pintu tengah' },
+            { bab: 14, jp: 'プラットホーム', kanji: '', romaji: 'purattohomu', arti: 'Peron' },
+            { bab: 14, jp: 'ばいてん', kanji: '売店', romaji: 'baiten', arti: 'Kios, kedai' },
+            { bab: 14, jp: 'コインロッカー', kanji: '', romaji: 'koin rokkā', arti: 'Loker' },
+            { bab: 14, jp: 'タクシーのりば', kanji: '', romaji: 'takushii noriba', arti: 'Tempat naik taksi' },
+            { bab: 14, jp: 'バスターミナル', kanji: '', romaji: 'basutāminaru', arti: 'Terminal bis' },
+            { bab: 14, jp: 'バスてい', kanji: 'バス停', romaji: 'basu tei', arti: 'Halte bis' },
+            { bab: 14, jp: 'かいそく', kanji: '快速', romaji: 'kaisoku', arti: 'Kereta cepat yang lewat pinggir kota' },
+            { bab: 14, jp: 'じゅんきゅう', kanji: '準急', romaji: 'junkyuu', arti: 'Kereta semi cepat' },
+            { bab: 14, jp: 'じこくひょう', kanji: '時刻表', romaji: 'jikoku hyou', arti: 'Jadwal keberangkatan bis,kereta dll' },
+            { bab: 14, jp: '～はつ', kanji: '～発', romaji: '~hatsu', arti: 'Berangkat dari / berangkat pukul' },
+            { bab: 14, jp: '～ちゃく', kanji: '～着', romaji: '~chaku', arti: 'Berangkat ke / tiba pukul' },
+            { bab: 14, jp: 'とうきょういき', kanji: '東京行き', romaji: 'toukyou iki', arti: 'Tujuan tokyo' },
+            { bab: 14, jp: 'ていきけん', kanji: '定期券', romaji: 'teikiken', arti: 'Kartu langganan berjangka' },
+            { bab: 14, jp: 'かいすうけん', kanji: '回数券', romaji: 'kaisuuken', arti: 'Karcis kupon' },
+            { bab: 14, jp: 'かたみち', kanji: '片道', romaji: 'katamichi', arti: 'Sekali jalan' },
+            { bab: 14, jp: 'おうふく', kanji: '往復', romaji: 'oufuku', arti: 'Pulang pergi' },
+            // Bab 15
+            { bab: 15, jp: 'つかう', kanji: '使う', romaji: 'tsukau', arti: 'memakai' },
+            { bab: 15, jp: 'はたらく', kanji: '働く', romaji: 'hataraku', arti: 'bekerja' },
+            { bab: 15, jp: 'おきます', kanji: '置きます', romaji: 'okimasu', arti: 'Meletakkan' },
+            { bab: 15, jp: 'つくります', kanji: '作ります', romaji: 'tsukurimasu', arti: 'Membuat' },
+            { bab: 15, jp: 'うります', kanji: '売ります', romaji: 'urimasu', arti: 'Menjual' },
+            { bab: 15, jp: 'しります', kanji: '知ります', romaji: 'shirimasu', arti: 'Mengenal, mengetahui' },
+            { bab: 15, jp: 'すみます', kanji: '住みます', romaji: 'sumimasu', arti: 'Tinggal' },
+            { bab: 15, jp: 'けんきゅうします', kanji: '研究します', romaji: 'kenkyuu shimasu', arti: 'Meneliti' },
+            { bab: 15, jp: 'しりょう', kanji: '資料', romaji: 'shiryou', arti: 'Data, bahan' },
+            { bab: 15, jp: 'カタログ', kanji: '', romaji: 'katarogu', arti: 'Katalog' },
+            { bab: 15, jp: 'ふく', kanji: '服', romaji: 'fuku', arti: 'Pakaian' },
+            { bab: 15, jp: 'せいひん', kanji: '製品', romaji: 'seihin', arti: 'Produk' },
+            { bab: 15, jp: 'ソフト', kanji: '', romaji: 'sofuto', arti: 'Perangkat lunak' },
+            { bab: 15, jp: 'でんしじしょ', kanji: '電子辞書', romaji: 'denshi jisho', arti: 'Kamus elektronik' },
+            { bab: 15, jp: 'けいざい', kanji: '経済', romaji: 'keizai', arti: 'Ekonomi' },
+            { bab: 15, jp: 'はいしゃ', kanji: '歯医者', romaji: 'haisha', arti: 'Dokter gigi' },
+            { bab: 15, jp: 'どくしん', kanji: '独身', romaji: 'dokushin', arti: 'Bujangan, jomblo' },
+            { bab: 15, jp: 'おもいだします', kanji: '思い出します', romaji: 'omoidashimasu', arti: 'Teringat' },
+            { bab: 15, jp: 'いらっしゃいます', kanji: '', romaji: 'irasshaimasu', arti: 'Ada (hidup)' },
+            { bab: 15, jp: 'しょくぎょう', kanji: '職業', romaji: 'shokugyou', arti: 'Pekerjaan, profesi' },
+            { bab: 15, jp: 'かいしゃいん', kanji: '会社員', romaji: 'kaishain', arti: 'Pegawai perusahaan' },
+            { bab: 15, jp: 'こうむいん', kanji: '公務員', romaji: 'koumuin', arti: 'Pegawai negeri' },
+            { bab: 15, jp: 'えきいん', kanji: '駅員', romaji: 'ekiin', arti: 'Pegawai stasiun' },
+            { bab: 15, jp: 'ぎんこういん', kanji: '銀行員', romaji: 'ginkouin', arti: 'Pegawai bank' },
+            { bab: 15, jp: 'ゆうびんきょくいん', kanji: '郵便局員', romaji: 'yuubinkyokuin', arti: 'Pegawai kantor pos' },
+            { bab: 15, jp: 'てんいん', kanji: '店員', romaji: 'ten\'in', arti: 'Pegawai toko' },
+            { bab: 15, jp: 'ちょうりし', kanji: '調理師', romaji: 'chourishi', arti: 'Tukang masak' },
+            { bab: 15, jp: 'りょうし', kanji: '理容師', romaji: 'ryoushi', arti: 'Tukang potong rambut' },
+            { bab: 15, jp: 'びょうし', kanji: '美容師', romaji: 'byoushi', arti: 'Ahli kecantikan' },
+            { bab: 15, jp: 'きょうし', kanji: '教師', romaji: 'kyoushi', arti: 'Guru' },
+            { bab: 15, jp: 'べんごし', kanji: '弁護士', romaji: 'bengoshi', arti: 'Pengacara' },
+            { bab: 15, jp: 'けんきゅうしゃ', kanji: '研究者', romaji: 'kenkyuusha', arti: 'Peneliti' },
+            { bab: 15, jp: 'いしゃ', kanji: '医者', romaji: 'isha', arti: 'Dokter' },
+            { bab: 15, jp: 'かんごし', kanji: '看護師', romaji: 'kangoshi', arti: 'Perawat' },
+            { bab: 15, jp: 'うんてんしゅ', kanji: '運転手', romaji: 'untenshu', arti: 'Sopir' },
+            { bab: 15, jp: 'けいさつかん', kanji: '警察官', romaji: 'keisatsukan', arti: 'Polisi' },
+            { bab: 15, jp: 'がいこうかん', kanji: '外交官', romaji: 'gaikoukan', arti: 'Diplomat' },
+            { bab: 15, jp: 'せいじか', kanji: '政治家', romaji: 'seijika', arti: 'Politikus' },
+            { bab: 15, jp: 'がか', kanji: '画家', romaji: 'gaka', arti: 'Pelukis' },
+            { bab: 15, jp: 'さっか', kanji: '作家', romaji: 'sakka', arti: 'Pengarang' },
+            { bab: 15, jp: 'おんがくか', kanji: '音楽家', romaji: 'ongakuka', arti: 'Musisi' },
+            { bab: 15, jp: 'けんちくか', kanji: '建築家', romaji: 'kenchikuka', arti: 'Arsitek' },
+            { bab: 15, jp: 'エンジニア', kanji: '', romaji: 'enjinia', arti: 'Insinyur' },
+            { bab: 15, jp: 'デザイナー', kanji: '', romaji: 'dezainaa', arti: 'Perancang busana' },
+            { bab: 15, jp: 'ジャーナリスト', kanji: '', romaji: 'jaanarisuto', arti: 'Wartawan' },
+            { bab: 15, jp: 'かしゅ', kanji: '歌手', romaji: 'kashu', arti: 'Penyanyi' },
+            { bab: 15, jp: 'はいゆう', kanji: '俳優', romaji: 'haiyuu', arti: 'Aktor / artis' },
+            { bab: 15, jp: 'スポーツせんしゅ', kanji: '', romaji: 'supootsu senshu', arti: 'Olahragawan / atlit' },
+            { bab: 16, jp: 'のります', kanji: '乗ります', romaji: 'norimasu', arti: 'Naik' },
+            { bab: 16, jp: 'おります', kanji: '降ります', romaji: 'orimasu', arti: 'Turun' },
+            { bab: 16, jp: 'のりかえます', kanji: '乗り換えます', romaji: 'norikaemasu', arti: 'Ganti, pindah kendaraan' },
+            { bab: 16, jp: 'あびます', kanji: '浴びます', romaji: 'abimasu', arti: 'Mandi' },
+            { bab: 16, jp: 'いれます', kanji: '入れます', romaji: 'iremasu', arti: 'Memasukkan' },
+            { bab: 16, jp: 'だします', kanji: '出します', romaji: 'dashimasu', arti: 'Mengeluarkan' },
+            { bab: 16, jp: 'おろします', kanji: '下ろします', romaji: 'oroshimasu', arti: 'Mengeluarkan/mengambil uang' },
+            { bab: 16, jp: 'はいります', kanji: '入ります', romaji: 'hairimasu', arti: 'Masuk' },
+            { bab: 16, jp: 'でます', kanji: '出ます', romaji: 'demasu', arti: 'Keluar' },
+            { bab: 16, jp: 'おします', kanji: '押します', romaji: 'oshimasu', arti: 'Menekan' },
+            { bab: 16, jp: 'のみます', kanji: '飲みます', romaji: 'nomimasu', arti: 'Minum' },
+            { bab: 16, jp: 'はじめます', kanji: '始めます', romaji: 'hajimemasu', arti: 'Mulai' },
+            { bab: 16, jp: 'けんがくします', kanji: '見学します', romaji: 'kengaku shimasu', arti: 'Mengunjungi' },
+            { bab: 16, jp: 'でんわします', kanji: '電話します', romaji: 'denwa shimasu', arti: 'Menelepon' },
+            { bab: 16, jp: 'わかい', kanji: '若い', romaji: 'wakai', arti: 'Muda' },
+            { bab: 16, jp: 'ながい', kanji: '長い', romaji: 'nagai', arti: 'Panjang' },
+            { bab: 16, jp: 'みじかい', kanji: '短い', romaji: 'mijikai', arti: 'Pendek' },
+            { bab: 16, jp: 'あかるい', kanji: '明るい', romaji: 'akarui', arti: 'Terang' },
+            { bab: 16, jp: 'くらい', kanji: '暗い', romaji: 'kurai', arti: 'Gelap' },
+            { bab: 16, jp: 'からだ', kanji: '体', romaji: 'karada', arti: 'Badan' },
+            { bab: 16, jp: 'あたま', kanji: '頭', romaji: 'atama', arti: 'Kepala' },
+            { bab: 16, jp: 'かみ', kanji: '髪', romaji: 'kami', arti: 'Rambut' },
+            { bab: 16, jp: 'かお', kanji: '顔', romaji: 'kao', arti: 'Wajah' },
+            { bab: 16, jp: 'め', kanji: '目', romaji: 'me', arti: 'Mata' },
+            { bab: 16, jp: 'みみ', kanji: '耳', romaji: 'mimi', arti: 'Telinga' },
+            { bab: 16, jp: 'はな', kanji: '鼻', romaji: 'hana', arti: 'Hidung' },
+            { bab: 16, jp: 'くち', kanji: '口', romaji: 'kuchi', arti: 'Mulut' },
+            { bab: 16, jp: 'は', kanji: '歯', romaji: 'ha', arti: 'Gigi' },
+            { bab: 16, jp: 'おなか', kanji: '', romaji: 'onaka', arti: 'Perut' },
+            { bab: 16, jp: 'あし', kanji: '足', romaji: 'ashi', arti: 'Kaki' },
+            { bab: 16, jp: 'せ', kanji: '背', romaji: 'se', arti: 'Punggung' },
+            { bab: 16, jp: 'サービス', kanji: '', romaji: 'saabisu', arti: 'Pelayanan' },
+            { bab: 16, jp: 'ジョギング', kanji: '', romaji: 'jogingu', arti: 'Joging' },
+            { bab: 16, jp: 'シャワー', kanji: '', romaji: 'shawaa', arti: 'Shower' },
+            { bab: 16, jp: 'みどり', kanji: '緑', romaji: 'midori', arti: 'Hijau' },
+            { bab: 16, jp: 'おてら', kanji: 'お寺', romaji: 'otera', arti: 'Kuil' },
+            { bab: 16, jp: 'じんじゃ', kanji: '神社', romaji: 'jinja', arti: 'Wihara' },
+            { bab: 16, jp: '～ばん', kanji: '～番', romaji: '~ban', arti: 'Nomer' },
+            { bab: 16, jp: 'どうやって', kanji: '', romaji: 'douyatte', arti: 'Dengan cara bagaimana, bagaimana caranya' },
+            { bab: 16, jp: 'どの～', kanji: '', romaji: 'dono~', arti: 'Yang mana?' },
+            { bab: 16, jp: 'どれ', kanji: '', romaji: 'dore', arti: 'Mana ?' },
+            { bab: 16, jp: 'すごいですね', kanji: '', romaji: 'sugoi desu ne', arti: 'Hebat' },
+            { bab: 16, jp: 'いいえ、まだまだです', kanji: '', romaji: 'iie, madamada desu', arti: 'Tidak, belum memuaskan' },
+            { bab: 16, jp: 'おひきだし', kanji: 'お引き出し', romaji: 'ohikidashi', arti: 'Penarikan uang' },
+            { bab: 16, jp: 'まず', kanji: '', romaji: 'mazu', arti: 'Pertama-tama, terlebih dahulu' },
+            { bab: 16, jp: 'つぎに', kanji: '次に', romaji: 'tsugi ni', arti: 'Kemudian, berikutnya' },
+            { bab: 16, jp: 'キャッシュカード', kanji: '', romaji: 'kyasshu kaado', arti: 'Kartu ATM' },
+            { bab: 16, jp: 'あんしょうばんごう', kanji: '暗証番号', romaji: 'anshou bangou', arti: 'PIN' },
+            { bab: 16, jp: 'きんがく', kanji: '金額', romaji: 'kingaku', arti: 'Jumlah uang' },
+            { bab: 16, jp: 'かくにん', kanji: '確認', romaji: 'kakunin', arti: 'Memastikan' },
+            { bab: 16, jp: 'ボタン', kanji: '', romaji: 'botan', arti: 'Tombol' },
+            { bab: 16, jp: 'ゆきまつり', kanji: '雪祭り', romaji: 'yukimatsuri', arti: 'Pesta salju' },
+            { bab: 16, jp: 'おあずけいれ', kanji: 'お預入れ', romaji: 'oazukeire', arti: 'Menambahkan saldo' },
+            { bab: 16, jp: 'おふりこみ', kanji: 'お振込み', romaji: 'ofurikomi', arti: 'Pembayaran' },
+            { bab: 16, jp: 'おふりかえ', kanji: 'お振り替え', romaji: 'ofurikae', arti: 'Pengiriman' },
+            { bab: 16, jp: 'つうちょうきにゅう', kanji: '通帳記入', romaji: 'tsuuchou kinyuu', arti: 'Pembaharuan buku catatan bank' },
+            { bab: 16, jp: 'ざんだかしょうかい', kanji: '残高照会', romaji: 'zandaka shoukai', arti: 'Cek saldo' },
+                        // Bab 16
+            { bab: 16, jp: 'みる', kanji: '見る', romaji: 'miru', arti: 'melihat' },
+            { bab: 16, jp: 'きく', kanji: '聞く', romaji: 'kiku', arti: 'mendengar' },
+            // Bab 17
+            { bab: 17, jp: 'たばこ', kanji: '煙草', romaji: 'tabako', arti: 'rokok' },
+            { bab: 17, jp: 'しごと', kanji: '仕事', romaji: 'shigoto', arti: 'pekerjaan' },
+            // Bab 18
+            { bab: 18, jp: 'あう', kanji: '会う', romaji: 'au', arti: 'bertemu' },
+            { bab: 18, jp: 'はなす', kanji: '話す', romaji: 'hanasu', arti: 'berbicara' },
+            // Bab 19
+            { bab: 19, jp: 'あたたかい', kanji: '暖かい', romaji: 'atatakai', arti: 'hangat' },
+            { bab: 19, jp: 'つめたい', kanji: '冷たい', romaji: 'tsumetai', arti: 'dingin' },
+            // Bab 20
+            { bab: 20, jp: 'あらう', kanji: '洗う', romaji: 'arau', arti: 'mencuci' },
+            { bab: 20, jp: 'できる', kanji: '出来る', romaji: 'dekiru', arti: 'bisa' },
+            // Bab 21
+            { bab: 21, jp: 'ならう', kanji: '習う', romaji: 'narau', arti: 'belajar (dari)' },
+            { bab: 21, jp: 'おしえる', kanji: '教える', romaji: 'oshieru', arti: 'mengajar' },
+            // Bab 22
+            { bab: 22, jp: 'つくる', kanji: '作る', romaji: 'tsukuru', arti: 'membuat' },
+            { bab: 22, jp: 'うる', kanji: '売る', romaji: 'uru', arti: 'menjual' },
+            // Bab 23
+            { bab: 23, jp: 'かう', kanji: '買う', romaji: 'kau', arti: 'membeli' },
+            { bab: 23, jp: 'とる', kanji: '取る', romaji: 'toru', arti: 'mengambil' },
+            // Bab 24
+            { bab: 24, jp: 'おく', kanji: '置く', romaji: 'oku', arti: 'meletakkan' },
+            { bab: 24, jp: 'なおす', kanji: '直す', romaji: 'naosu', arti: 'memperbaiki' },
+            // Bab 25
+            { bab: 25, jp: 'もっていく', kanji: '持っていく', romaji: 'motteiku', arti: 'membawa (pergi)' },
+            { bab: 25, jp: 'つれていく', kanji: '連れていく', romaji: 'tsureteiku', arti: 'mengantar' },
+            // Bab 26
+            { bab: 26, jp: 'もつ', kanji: '持つ', romaji: 'motsu', arti: 'memegang' },
+            { bab: 26, jp: 'わかる', kanji: '分かる', romaji: 'wakaru', arti: 'mengerti' },
+            // Bab 27
+            { bab: 27, jp: 'しる', kanji: '知る', romaji: 'shiru', arti: 'mengetahui' },
+            { bab: 27, jp: 'いれる', kanji: '入れる', romaji: 'ireru', arti: 'memasukkan' },
+            // Bab 28
+            { bab: 28, jp: 'だす', kanji: '出す', romaji: 'dasu', arti: 'mengeluarkan' },
+            { bab: 28, jp: 'はいる', kanji: '入る', romaji: 'hairu', arti: 'masuk' },
+            // Bab 29
+            { bab: 29, jp: 'でる', kanji: '出る', romaji: 'deru', arti: 'keluar' },
+            { bab: 29, jp: 'かける', kanji: '掛ける', romaji: 'kakeru', arti: 'menelepon' },
+            // Bab 30
+            { bab: 30, jp: 'つく', kanji: '着く', romaji: 'tsuku', arti: 'tiba' },
+            { bab: 30, jp: 'とまる', kanji: '止まる', romaji: 'tomaru', arti: 'berhenti' },
+            // Bab 31
+            { bab: 31, jp: 'おどる', kanji: '踊る', romaji: 'odoru', arti: 'menari' },
+            { bab: 31, jp: 'うたう', kanji: '歌う', romaji: 'utau', arti: 'menyanyi' },
+            // Bab 32
+            { bab: 32, jp: 'およぐ', kanji: '泳ぐ', romaji: 'oyogu', arti: 'berenang' },
+            { bab: 32, jp: 'あそぶ', kanji: '遊ぶ', romaji: 'asobu', arti: 'bermain' },
+            // Bab 33
+            { bab: 33, jp: 'ふる', kanji: '降る', romaji: 'furu', arti: 'turun (hujan)' },
+            { bab: 33, jp: 'やむ', kanji: '止む', romaji: 'yamu', arti: 'berhenti (hujan)' },
+            // Bab 34
+            { bab: 34, jp: 'かぜ', kanji: '風', romaji: 'kaze', arti: 'angin' },
+            { bab: 34, jp: 'あめ', kanji: '雨', romaji: 'ame', arti: 'hujan' },
+            // Bab 35
+            { bab: 35, jp: 'ゆき', kanji: '雪', romaji: 'yuki', arti: 'salju' },
+            { bab: 35, jp: 'はれ', kanji: '晴れ', romaji: 'hare', arti: 'cerah' },
+            // Bab 36
+            { bab: 36, jp: 'くもり', kanji: '曇り', romaji: 'kumori', arti: 'mendung' },
+            { bab: 36, jp: 'あつい', kanji: '暑い', romaji: 'atsui', arti: 'panas' },
+            // Bab 37
+            { bab: 37, jp: 'さむい', kanji: '寒い', romaji: 'samui', arti: 'dingin' },
+            { bab: 37, jp: 'すずしい', kanji: '涼しい', romaji: 'suzushii', arti: 'sejuk' },
+            // Bab 38
+            { bab: 38, jp: 'たかい', kanji: '高い', romaji: 'takai', arti: 'tinggi / mahal' },
+            { bab: 38, jp: 'ひくい', kanji: '低い', romaji: 'hikui', arti: 'rendah' },
+            // Bab 39
+            { bab: 39, jp: 'おおきい', kanji: '大きい', romaji: 'ookii', arti: 'besar' },
+            { bab: 39, jp: 'ちいさい', kanji: '小さい', romaji: 'chiisai', arti: 'kecil' },
+            // Bab 40
+            { bab: 40, jp: 'あかい', kanji: '赤い', romaji: 'akai', arti: 'merah' },
+            { bab: 40, jp: 'あおい', kanji: '青い', romaji: 'aoi', arti: 'biru' },
+            // Bab 41
+            { bab: 41, jp: 'しろい', kanji: '白い', romaji: 'shiroi', arti: 'putih' },
+            { bab: 41, jp: 'くろい', kanji: '黒い', romaji: 'kuroi', arti: 'hitam' },
+            // Bab 42
+            { bab: 42, jp: 'おいしい', kanji: '美味しい', romaji: 'oishii', arti: 'enak' },
+            { bab: 42, jp: 'まずい', kanji: '不味い', romaji: 'mazui', arti: 'tidak enak' },
+            // Bab 43
+            { bab: 43, jp: 'やすい', kanji: '安い', romaji: 'yasui', arti: 'murah' },
+            { bab: 43, jp: 'たかい', kanji: '高い', romaji: 'takai', arti: 'mahal' },
+            // Bab 44
+            { bab: 44, jp: 'おそい', kanji: '遅い', romaji: 'osoi', arti: 'lambat / terlambat' },
+            { bab: 44, jp: 'はやい', kanji: '早い', romaji: 'hayai', arti: 'cepat / awal' },
+            // Bab 45
+            { bab: 45, jp: 'あたらしい', kanji: '新しい', romaji: 'atarashii', arti: 'baru' },
+            { bab: 45, jp: 'ふるい', kanji: '古い', romaji: 'furui', arti: 'lama' },
+            // Bab 46
+            { bab: 46, jp: 'むずかしい', kanji: '難しい', romaji: 'muzukashii', arti: 'sulit' },
+            { bab: 46, jp: 'やさしい', kanji: '易しい', romaji: 'yasashii', arti: 'mudah' },
+            // Bab 47
+            { bab: 47, jp: 'おもしろい', kanji: '面白い', romaji: 'omoshiroi', arti: 'menarik' },
+            { bab: 47, jp: 'つまらない', kanji: '詰まらない', romaji: 'tsumaranai', arti: 'membosankan' },
+            // Bab 48
+            { bab: 48, jp: 'きれい', kanji: '綺麗', romaji: 'kirei', arti: 'cantik' },
+            { bab: 48, jp: 'うつくしい', kanji: '美しい', romaji: 'utsukushii', arti: 'indah' },
+            // Bab 49
+            { bab: 49, jp: 'げんき', kanji: '元気', romaji: 'genki', arti: 'sehat / semangat' },
+            { bab: 49, jp: 'びょうき', kanji: '病気', romaji: 'byouki', arti: 'sakit' },
+            // Bab 50
+            { bab: 50, jp: 'しんせつ', kanji: '親切', romaji: 'shinsetsu', arti: 'baik hati' },
+            { bab: 50, jp: 'ていねい', kanji: '丁寧', romaji: 'teinei', arti: 'sopan' }
+        ];
+
+        // ============================================================
+        //  AKUN & PASSWORD
+        // ============================================================
+        const ACCOUNTS = {
+            kelas1: { password: 'kelas1', label: 'Kelas 1', maxBab: 25 },
+            kelas2: { password: 'kelas2', label: 'Kelas 2', maxBab: 50 },
+            sensei: { password: 'sensei', label: 'Sensei', maxBab: 50 },
+        };
+
+        // ============================================================
+        //  STATE
+        // ============================================================
+        let state = {
+            user: null,
+            currentExam: null,
+            filteredBab: 'all', // untuk dropdown filter tabel
+        };
+
+        // ============================================================
+        //  DOM REFS
+        // ============================================================
+        const $ = (id) => document.getElementById(id);
+        const loginSection = $('loginSection');
+        const dashboardSection = $('dashboardSection');
+        const quizSection = $('quizSection');
+        const gameoverSection = $('gameoverSection');
+        const loginLevel = $('loginLevel');
+        const loginPassword = $('loginPassword');
+        const loginBtn = $('loginBtn');
+        const loginError = $('loginError');
+        const logoutBtn = $('logoutBtn');
+        const userNameDisplay = $('userNameDisplay');
+        const roleTagDisplay = $('roleTagDisplay');
+        const accessInfo = $('accessInfo');
+        const examMode = $('examMode');
+        const examGrid = $('examGrid');
+        const vocabTableBody = $('vocabTableBody');
+        const babFilter = $('babFilter');
+        const filterCount = $('filterCount');
+        const quizRange = $('quizRange');
+        const quizProgress = $('quizProgress');
+        const quizWordKanji = $('quizWordKanji');
+        const quizWordHiragana = $('quizWordHiragana');
+        const quizWordRomaji = $('quizWordRomaji');
+        const timerDisplay = $('timerDisplay');
+        const scoreDisplay = $('scoreDisplay');
+        const optionsGrid = $('optionsGrid');
+        const quitQuizBtn = $('quitQuizBtn');
+        const finalScore = $('finalScore');
+        const goRange = $('goRange');
+        const goTotal = $('goTotal');
+        const retryBtn = $('retryBtn');
+        const goDashboardBtn = $('goDashboardBtn');
+        const quizLabel = $('quizLabel');
+
+        // ============================================================
+        //  HELPERS
+        // ============================================================
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function getRandomWrongOptions(correctArti, excludeBab, count = 3) {
+            const pool = VOCAB_DATA.filter(v => v.arti !== correctArti && v.bab !== excludeBab);
+            const shuffled = shuffle([...pool]);
+            return shuffled.slice(0, count).map(v => v.arti);
+        }
+
+        function buildOptions(correctArti, bab) {
+            const wrongs = getRandomWrongOptions(correctArti, bab, 3);
+            const opts = [
+                { text: correctArti, isCorrect: true },
+                ...wrongs.map(t => ({ text: t, isCorrect: false })),
+            ];
+            return shuffle(opts);
+        }
+
+        function getVocabByBab(bab) {
+            return VOCAB_DATA.filter(v => v.bab === bab);
+        }
+
+        function getBabListForMode(mode, maxBab) {
+            const allBabs = [];
+            for (let b = 1; b <= maxBab; b++) {
+                allBabs.push(b);
+            }
+            if (mode === 'perBab') {
+                return allBabs.map(b => [b]);
+            } else if (mode === 'per5Bab') {
+                const groups = [];
+                for (let i = 0; i < allBabs.length; i += 5) {
+                    const group = allBabs.slice(i, i + 5);
+                    groups.push(group);
+                }
+                return groups;
+            } else if (mode === 'per25Bab') {
+                const groups = [];
+                for (let i = 0; i < allBabs.length; i += 25) {
+                    const group = allBabs.slice(i, i + 25);
+                    groups.push(group);
+                }
+                return groups;
+            }
+            return [];
+        }
+
+        function formatRangeLabel(babList) {
+            if (babList.length === 1) return `Bab ${babList[0]}`;
+            return `Bab ${babList[0]}–${babList[babList.length - 1]}`;
+        }
+
+        function getQuestionsForBabList(babList) {
+            let vocab = [];
+            babList.forEach(b => {
+                const items = getVocabByBab(b);
+                vocab = vocab.concat(items);
+            });
+            return shuffle([...vocab]);
+        }
+
+        // ============================================================
+        //  RENDER: DASHBOARD
+        // ============================================================
+        function renderDashboard() {
+            if (!state.user) return;
+            const maxBab = state.user.maxBab;
+            const mode = examMode.value;
+
+            accessInfo.textContent = `Akses: Bab 1–${maxBab}`;
+
+            // Exam cards
+            const babGroups = getBabListForMode(mode, maxBab);
+            examGrid.innerHTML = '';
+            if (babGroups.length === 0) {
+                examGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,0.3);padding:20px;">Tidak ada ujian tersedia</div>';
+            } else {
+                babGroups.forEach((group) => {
+                    const card = document.createElement('div');
+                    card.className = 'exam-card';
+                    const label = formatRangeLabel(group);
+                    card.innerHTML = `
+                        <div class="exam-title">${label}</div>
+                    `;
+                    card.addEventListener('click', () => startQuiz(group));
+                    examGrid.appendChild(card);
+                });
+            }
+
+            // Populate filter dropdown
+            const currentFilter = babFilter.value;
+            babFilter.innerHTML = '<option value="all">📋 Semua Bab</option>';
+            for (let b = 1; b <= maxBab; b++) {
+                const opt = document.createElement('option');
+                opt.value = b;
+                opt.textContent = `Bab ${b}`;
+                babFilter.appendChild(opt);
+            }
+            // Restore previous filter if valid
+            if (currentFilter !== 'all' && parseInt(currentFilter) <= maxBab) {
+                babFilter.value = currentFilter;
+            } else if (currentFilter !== 'all') {
+                babFilter.value = 'all';
+            }
+            state.filteredBab = babFilter.value;
+
+            // Render table with filter
+            renderVocabTable();
+
+            userNameDisplay.textContent = state.user.role;
+            roleTagDisplay.textContent = state.user.label;
+        }
+
+        function renderVocabTable() {
+            if (!state.user) return;
+            const maxBab = state.user.maxBab;
+            const filter = state.filteredBab || 'all';
+
+            let filteredData = VOCAB_DATA.filter(v => v.bab <= maxBab);
+            if (filter !== 'all') {
+                const babNum = parseInt(filter);
+                filteredData = filteredData.filter(v => v.bab === babNum);
+            }
+
+            vocabTableBody.innerHTML = '';
+            filteredData.forEach(v => {
+                const tr = document.createElement('tr');
+                const kanjiDisplay = v.kanji || v.jp;
+                tr.innerHTML = `
+                    <td class="ch-cell">${v.bab}</td>
+                    <td class="kanji-cell">${kanjiDisplay}</td>
+                    <td class="hiragana-cell">${v.jp}</td>
+                    <td class="romaji-cell">${v.romaji}</td>
+                    <td>${v.arti}</td>
+                `;
+                vocabTableBody.appendChild(tr);
+            });
+
+            filterCount.textContent = `Menampilkan ${filteredData.length} kosakata`;
+        }
+
+        // ============================================================
+        //  QUIZ LOGIC
+        // ============================================================
+        function startQuiz(babList) {
+            if (!state.user) return;
+            const maxBab = state.user.maxBab;
+            if (babList.some(b => b > maxBab)) {
+                alert('Anda tidak memiliki akses ke bab tersebut.');
+                return;
+            }
+
+            if (state.currentExam && state.currentExam.timerId) {
+                clearInterval(state.currentExam.timerId);
+            }
+
+            const questions = getQuestionsForBabList(babList);
+            if (questions.length === 0) {
+                alert('Tidak ada kosakata untuk ujian ini.');
+                return;
+            }
+
+            state.currentExam = {
+                mode: examMode.value,
+                range: babList,
+                questions: questions,
+                currentIndex: 0,
+                score: 0,
+                timeLeft: 10,
+                timerId: null,
+                isActive: true,
+                isAnswering: false,
+                totalQuestions: questions.length,
+            };
+
+            dashboardSection.classList.add('hidden');
+            quizSection.classList.remove('hidden');
+            gameoverSection.classList.add('hidden');
+
+            quizRange.textContent = formatRangeLabel(babList);
+            updateQuizProgress();
+            updateTimerDisplay();
+            updateScoreDisplay();
+
+            showQuestion();
+
+            if (state.currentExam.timerId) clearInterval(state.currentExam.timerId);
+            state.currentExam.timerId = setInterval(() => {
+                if (!state.currentExam || !state.currentExam.isActive) return;
+                state.currentExam.timeLeft -= 0.1;
+                if (state.currentExam.timeLeft <= 0) {
+                    state.currentExam.timeLeft = 0;
+                    updateTimerDisplay();
+                    endQuiz();
+                    return;
+                }
+                updateTimerDisplay();
+            }, 100);
+        }
+
+        function showQuestion() {
+            const exam = state.currentExam;
+            if (!exam || !exam.isActive) return;
+            const q = exam.questions[exam.currentIndex];
+            if (!q) {
+                endQuiz();
+                return;
+            }
+
+            exam.isAnswering = false;
+
+            const kanjiDisplay = q.kanji || q.jp;
+            quizWordKanji.textContent = kanjiDisplay;
+            quizWordHiragana.textContent = q.jp;
+            quizWordRomaji.textContent = q.romaji;
+
+            const opts = buildOptions(q.arti, q.bab);
+            exam.currentOptions = opts;
+
+            optionsGrid.innerHTML = '';
+            opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt.text;
+                btn.dataset.index = idx;
+                btn.addEventListener('click', () => handleAnswer(idx));
+                optionsGrid.appendChild(btn);
+            });
+
+            updateQuizProgress();
+        }
+
+        function handleAnswer(index) {
+            const exam = state.currentExam;
+            if (!exam || !exam.isActive || exam.isAnswering) return;
+            exam.isAnswering = true;
+
+            const selected = exam.currentOptions[index];
+            if (!selected) {
+                exam.isAnswering = false;
+                return;
+            }
+
+            const isCorrect = selected.isCorrect;
+            if (isCorrect) {
+                exam.score++;
+                exam.timeLeft += 2;
+            } else {
+                exam.timeLeft -= 1;
+                if (exam.timeLeft < 0) exam.timeLeft = 0;
+            }
+
+            updateTimerDisplay();
+            updateScoreDisplay();
+
+            if (exam.timeLeft <= 0) {
+                exam.timeLeft = 0;
+                updateTimerDisplay();
+                endQuiz();
+                return;
+            }
+
+            const nextIndex = exam.currentIndex + 1;
+            if (nextIndex < exam.questions.length) {
+                exam.currentIndex = nextIndex;
+                const btns = optionsGrid.querySelectorAll('.option-btn');
+                btns.forEach(b => b.disabled = true);
+                setTimeout(() => {
+                    if (!exam.isActive) return;
+                    btns.forEach(b => b.disabled = false);
+                    showQuestion();
+                }, 150);
+            } else {
+                const newQuestions = shuffle([...exam.questions]);
+                exam.questions = newQuestions;
+                exam.currentIndex = 0;
+                const btns = optionsGrid.querySelectorAll('.option-btn');
+                btns.forEach(b => b.disabled = true);
+                setTimeout(() => {
+                    if (!exam.isActive) return;
+                    btns.forEach(b => b.disabled = false);
+                    showQuestion();
+                }, 150);
+            }
+        }
+
+        function updateTimerDisplay() {
+            if (!state.currentExam) return;
+            const val = Math.ceil(state.currentExam.timeLeft);
+            timerDisplay.textContent = val;
+            timerDisplay.className = 'timer-value';
+            if (val <= 3) timerDisplay.classList.add('danger');
+            else if (val <= 6) timerDisplay.classList.add('warning');
+            else timerDisplay.classList.add('safe');
+        }
+
+        function updateScoreDisplay() {
+            if (!state.currentExam) return;
+            scoreDisplay.textContent = state.currentExam.score;
+        }
+
+        function updateQuizProgress() {
+            if (!state.currentExam) return;
+            const total = state.currentExam.totalQuestions;
+            const current = state.currentExam.currentIndex + 1;
+            quizProgress.textContent = `Soal ${current} / ${total}`;
+        }
+
+        function endQuiz() {
+            const exam = state.currentExam;
+            if (!exam) return;
+            if (exam.timerId) {
+                clearInterval(exam.timerId);
+                exam.timerId = null;
+            }
+            exam.isActive = false;
+
+            quizSection.classList.add('hidden');
+            gameoverSection.classList.remove('hidden');
+            finalScore.textContent = exam.score;
+            goRange.textContent = formatRangeLabel(exam.range);
+            goTotal.textContent = exam.totalQuestions;
+        }
+
+        // ============================================================
+        //  LOGIN / LOGOUT
+        // ============================================================
+        function handleLogin() {
+            const role = loginLevel.value;
+            const password = loginPassword.value.trim();
+            const account = ACCOUNTS[role];
+            if (!account) {
+                loginError.textContent = 'Level tidak valid.';
+                return;
+            }
+            if (password !== account.password) {
+                loginError.textContent = '❌ Password salah.';
+                return;
+            }
+
+            loginError.textContent = '';
+            state.user = {
+                role: role,
+                maxBab: account.maxBab,
+                label: account.label,
+            };
+
+            loginSection.classList.add('hidden');
+            dashboardSection.classList.remove('hidden');
+            quizSection.classList.add('hidden');
+            gameoverSection.classList.add('hidden');
+
+            renderDashboard();
+        }
+
+        function handleLogout() {
+            if (state.currentExam && state.currentExam.timerId) {
+                clearInterval(state.currentExam.timerId);
+                state.currentExam.timerId = null;
+            }
+            state.user = null;
+            state.currentExam = null;
+            loginSection.classList.remove('hidden');
+            dashboardSection.classList.add('hidden');
+            quizSection.classList.add('hidden');
+            gameoverSection.classList.add('hidden');
+            loginPassword.value = '';
+            loginError.textContent = '';
+        }
+
+        function goToDashboard() {
+            if (state.currentExam && state.currentExam.timerId) {
+                clearInterval(state.currentExam.timerId);
+                state.currentExam.timerId = null;
+            }
+            state.currentExam = null;
+            quizSection.classList.add('hidden');
+            gameoverSection.classList.add('hidden');
+            dashboardSection.classList.remove('hidden');
+            renderDashboard();
+        }
+
+        function retryQuiz() {
+            if (state.currentExam && state.currentExam.range) {
+                startQuiz(state.currentExam.range);
+            } else {
+                goToDashboard();
+            }
+        }
+
+        // ============================================================
+        //  EVENT BINDING
+        // ============================================================
+        loginBtn.addEventListener('click', handleLogin);
+        loginPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleLogin(); });
+        logoutBtn.addEventListener('click', handleLogout);
+        quitQuizBtn.addEventListener('click', goToDashboard);
+        retryBtn.addEventListener('click', retryQuiz);
+        goDashboardBtn.addEventListener('click', goToDashboard);
+        examMode.addEventListener('change', renderDashboard);
+
+        // Filter dropdown event
+        babFilter.addEventListener('change', function() {
+            state.filteredBab = this.value;
+            renderVocabTable();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!state.currentExam || !state.currentExam.isActive) return;
+            const num = parseInt(e.key);
+            if (num >= 1 && num <= 4) {
+                const btns = optionsGrid.querySelectorAll('.option-btn');
+                if (btns[num - 1] && !btns[num - 1].disabled) {
+                    btns[num - 1].click();
+                }
+            }
+        });
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        loginSection.classList.remove('hidden');
+        dashboardSection.classList.add('hidden');
+        quizSection.classList.add('hidden');
+        gameoverSection.classList.add('hidden');
+
+        console.log('📚 Minna no Nihongo Kuis Kosakata (2 kata per bab)');
+        console.log('🔑 Level: kelas1 (pw:kelas1), kelas2 (pw:kelas2), sensei (pw:sensei)');
+        console.log('📖 Mode ujian: Per Bab, Setiap 5 Bab, Setiap 25 Bab');
+        console.log('⏱️ 10 detik awal, +2 benar, -1 salah, soal berulang looping');
+        console.log('⌨️ Tekan 1-4 untuk jawaban cepat');
+        console.log('📂 Gunakan dropdown filter untuk melihat kosakata per bab');
+    </script>
+</body>
+</html>
