@@ -747,7 +747,7 @@
                     </div>
                     <div class="timer-box">
                         <span class="timer-icon">⏳</span>
-                        <span class="timer-value safe" id="timerDisplay">10</span>
+                        <span class="timer-value safe" id="timerDisplay">30</span>
                         <span style="font-size:15px;color:rgba(255,255,255,0.3);">dtk</span>
                     </div>
                     <div class="score-box">
@@ -3029,9 +3029,9 @@
             const isCorrect = selected.isCorrect;
             if (isCorrect) {
                 exam.score++;
-                exam.timeLeft += 2;
+                exam.timeLeft += 3;
             } else {
-                exam.timeLeft -= 1;
+                exam.timeLeft -= 5;
                 if (exam.timeLeft < 0) exam.timeLeft = 0;
             }
 
